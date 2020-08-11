@@ -41,5 +41,29 @@
     "jest-expo": "~38.0.0",
     "typescript": "~3.9.5"
   },
-  "private": true
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MerelyServices/MerelyMusic.git"
+  },
+  "keywords": [
+    "music",
+    "streaming",
+    "service",
+    "android",
+    "ios",
+    "web",
+    "firebase",
+    "react",
+    "react",
+    "native",
+    "react",
+    "native",
+    "web"
+  ],
+  "author": "yiays",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MerelyServices/MerelyMusic/issues"
+  },
+  "homepage": "https://github.com/MerelyServices/MerelyMusic#readme"
 }
