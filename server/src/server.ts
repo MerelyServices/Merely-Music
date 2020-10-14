@@ -6,6 +6,7 @@ import { PassportLink, AuthSession } from './models';
 import yargs from 'yargs';
 const argv = yargs.options({
                             dburl: { type: 'string', description: "The URL of the MongoDB server.", demandOption: true, alias: 'db' },
+                            secret: { type: 'string', description: "The application secret for the Passport API.", demandOption: true },
                             help: { alias: 'h', description: "Presents you with this help page." },
                             version: {alias: ['ver', 'v'], description: "Returns the current version of this server." }
                           }).argv
@@ -13,7 +14,7 @@ const argv = yargs.options({
 const app = express();
 const dburl = argv.dburl;
 const port = 8080;
-const passport:PassportLink = new PassportLink(4, "", "http://localhost:8080/user/callback");
+const passport:PassportLink = new PassportLink(4, argv.secret, "http://localhost:8080/user/callback");
 const authSessions:AuthSession[] = [];
 const routes = routesBuilder(passport, authSessions);
 
