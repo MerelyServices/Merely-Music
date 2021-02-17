@@ -1,7 +1,7 @@
 import express from "express";
 import { MongoHelper } from './mongo.helper';
 import routesBuilder from './routes';
-import { PassportLink, AuthSession } from './models';
+import { PassportLink, AuthSessions } from './models';
 
 import yargs from 'yargs';
 const argv = yargs.options({
@@ -14,8 +14,8 @@ const argv = yargs.options({
 const app = express();
 const dburl = argv.dburl;
 const port = 8080;
-const passport:PassportLink = new PassportLink(4, argv.secret, "http://localhost:8080/user/callback");
-const authSessions:AuthSession[] = [];
+const passport = new PassportLink(4, argv.secret, `http://localhost:${port}/user/callback`);
+let authSessions: AuthSessions;
 const routes = routesBuilder(passport, authSessions);
 
 app.use(routes);

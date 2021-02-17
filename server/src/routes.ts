@@ -1,11 +1,13 @@
 import * as express from 'express';
 import * as mongodb from 'mongodb';
+import axios from "axios";
+import qs from "qs";
 import { MongoHelper } from './mongo.helper';
-import { PassportLink, AuthSession } from './models';
+import { PassportLink, PassportUser, AuthSessions } from './models';
 
 const routes = express.Router();
 
-export default function(passport:PassportLink, authsessions:AuthSession[] ){
+export default function(passport:PassportLink, authsessions:AuthSessions ){
   // define a route handler for the default home page
   routes.get("/", (req, res) => {
     res.json({message: "Server is running!"});
@@ -160,11 +162,20 @@ export default function(passport:PassportLink, authsessions:AuthSession[] ){
 
   routes.get("/user/login", (req, res) => {
     const redirect = encodeURIComponent(passport.CallbackUrl);
-    res.json({'redirect':`https://passport.yiays.com/oauth2/authorize?id=${passport.AppId}&redirect=${redirect}`});
+    res.json({'redirect':`https://passport.yiays.com/api/oauth2/authorize?id=${passport.AppId}&redirect=${redirect}`});
   });
 
-  routes.get('/user/callback', (req, res) => {
-    res.json({});
+  routes.get('/user/callback', async (req, res) => {
+    const data = {client_id: passport.AppId, client_secret: passport.Secret, code: req.query.code};
+    const result = await axios.post<any>('https://passport.yiays.com/api/oauth2/token',
+                                          qs.stringify(data),
+                                          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+                                        ).catch((_)=>{res.status(500).json({success:false, msg:"Failed to authenticate with Passport!"}).end()});
+    if(result && result.status === 200){
+      res.json(result.data);
+    }else{
+      throw Error("Callback failed and error wasn't caught, this shouldn't happen.");
+    }
   });
 
   return routes;

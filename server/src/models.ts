@@ -15,6 +15,7 @@ class PassportLink {
 
 class PassportUser {
 	public Id:number;
+	public Token:string;
 	public Username:string;
 	public ProfileUrl:string;
 	public Email:string;
@@ -23,8 +24,8 @@ class PassportUser {
 	public Banned:boolean;
 }
 
-interface AuthSession{
+interface AuthSessions{
   [key:string]:PassportUser
 }
 
-export { PassportLink, PassportUser, AuthSession }
+export { PassportLink, PassportUser, AuthSessions }
