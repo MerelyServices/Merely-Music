@@ -1,45 +1,15 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "eject": "expo eject",
+    "start": "npx expo start",
+    "android": "npx expo start --android",
+    "ios": "npx expo start --ios",
+    "web": "npx expo start --web",
+    "eject": "npx expo eject",
     "test": "jest --watchAll"
   },
   "jest": {
     "preset": "jest-expo"
-  },
-  "dependencies": {
-    "@expo/vector-icons": "^10.0.0",
-    "@react-native-community/masked-view": "0.1.10",
-    "@react-navigation/bottom-tabs": "^5.6.1",
-    "@react-navigation/native": "^5.6.1",
-    "@react-navigation/stack": "^5.6.2",
-    "expo": "~38.0.8",
-    "expo-asset": "~8.1.7",
-    "expo-constants": "~9.1.1",
-    "expo-font": "~8.2.1",
-    "expo-linking": "^1.0.1",
-    "expo-splash-screen": "~0.3.1",
-    "expo-status-bar": "^1.0.2",
-    "expo-web-browser": "~8.3.1",
-    "react": "~16.11.0",
-    "react-dom": "~16.11.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
-    "react-native-gesture-handler": "~1.6.0",
-    "react-native-safe-area-context": "~3.0.7",
-    "react-native-screens": "~2.9.0",
-    "react-native-web": "~0.11.7"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.8.6",
-    "@types/react": "~16.9.23",
-    "@types/react-native": "~0.62.13",
-    "babel-preset-expo": "~8.1.0",
-    "jest-expo": "~38.0.0",
-    "typescript": "~3.9.5"
   },
   "repository": {
     "type": "git",
@@ -65,5 +35,38 @@
   "bugs": {
     "url": "https://github.com/MerelyServices/MerelyMusic/issues"
   },
-  "homepage": "https://github.com/MerelyServices/MerelyMusic#readme"
+  "homepage": "https://github.com/MerelyServices/MerelyMusic#readme",
+  "dependencies": {
+    "@expo/metro-runtime": "~3.2.3",
+    "@expo/vector-icons": "^14.0.4",
+    "@react-native-community/cli-server-api": "^15.0.0",
+    "@react-native-community/masked-view": "^0.1.11",
+    "@react-navigation/bottom-tabs": "^6.6.1",
+    "@react-navigation/native": "^6.1.18",
+    "@react-navigation/stack": "^6.4.1",
+    "expo": "^51.0.38",
+    "expo-asset": "^10.0.10",
+    "expo-constants": "^16.0.2",
+    "expo-font": "^12.0.10",
+    "expo-linking": "^6.3.1",
+    "expo-splash-screen": "^0.27.6",
+    "expo-status-bar": "^1.12.1",
+    "expo-web-browser": "^13.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-native": "^0.74.5",
+    "react-native-gesture-handler": "~2.16.1",
+    "react-native-safe-area-context": "^4.10.5",
+    "react-native-screens": "^3.31.1",
+    "react-native-web": "^0.19.13"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@expo/cli": "^0.18.30",
+    "@types/react": "~18.2.79",
+    "@types/react-native": "^0.72.8",
+    "babel-preset-expo": "^11.0.15",
+    "jest-expo": "^51.0.4",
+    "typescript": "^5.3.3"
+  }
 }
