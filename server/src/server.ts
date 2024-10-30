@@ -1,22 +1,18 @@
 import express from "express";
+import dotenv from 'dotenv';
+
 import { MongoHelper } from './mongo.helper';
 import routesBuilder from './routes';
 import { PassportLink, AuthSessions } from './models';
 
-import yargs from 'yargs';
-const argv = yargs.options({
-                            dburl: { type: 'string', description: "The URL of the MongoDB server.", demandOption: true, alias: 'db' },
-                            secret: { type: 'string', description: "The application secret for the Passport API.", demandOption: true },
-                            help: { alias: 'h', description: "Presents you with this help page." },
-                            version: {alias: ['ver', 'v'], description: "Returns the current version of this server." }
-                          }).argv
+dotenv.config();
 
 const app = express();
-const dburl = argv.dburl;
+const dburl = process.env.DBURL;
 const port = 8080;
-const passport = new PassportLink(4, argv.secret, `http://localhost:${port}/user/callback`);
-let authSessions: AuthSessions;
-const routes = routesBuilder(passport, authSessions);
+const passport = new PassportLink(4, process.env.SECRET, `http://localhost:${port}/user/callback`);
+// let authSessions: AuthSessions;
+const routes = routesBuilder(passport, /*authSessions*/ null);
 
 app.use(routes);
 

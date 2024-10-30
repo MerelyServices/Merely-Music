@@ -1,18 +1,10 @@
-import * as mongo from 'mongodb';
+import * as mongoDB from 'mongodb';
 
 export class MongoHelper {
-  public static client: mongo.MongoClient;
+  public static client: mongoDB.MongoClient;
 
-  public static connect(url: string): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      mongo.MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client: mongo.MongoClient) => {
-        if (err) {
-          reject(err);
-        } else {
-          MongoHelper.client = client;
-          resolve(client);
-        }
-      });
-    });
+  public static connect(url: string): Promise<mongoDB.MongoClient> {
+    this.client = new mongoDB.MongoClient(url);
+    return this.client.connect()
   }
 }
