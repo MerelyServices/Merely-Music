@@ -7,7 +7,7 @@ export class PassportLink {
 		return this;
 	}
 
-	public async getProfile(token:string): Promise<boolean | PassportProfile> {
+	public async getProfile(token:string): Promise<false | PassportProfile> {
 		// Ensures client is logged in and returns the profile
 		if(token in this.sessions) {
 			// Use cached token if it meets the security requirements
