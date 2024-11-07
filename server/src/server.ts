@@ -3,16 +3,15 @@ import dotenv from 'dotenv';
 
 import { MongoHelper } from './mongo.helper';
 import routesBuilder from './routes';
-import { PassportLink, AuthSessions } from './models';
+import { PassportLink } from './passport';
 
 dotenv.config();
 
 const app = express();
 const dburl = process.env.DBURL;
 const port = 8080;
-const passport = new PassportLink(4, process.env.SECRET, `http://localhost:${port}/user/callback`);
-// let authSessions: AuthSessions;
-const routes = routesBuilder(passport, /*authSessions*/ null);
+const passport = new PassportLink('https://passport.yiays.com/api');
+const routes = routesBuilder(passport);
 
 app.use(routes);
 
@@ -20,12 +19,6 @@ app.use(routes);
 app.use((req, res, next) => {
   res.status(404).json({message: "Command not found!"});
 });
-
-// 500 page
-/*app.use((err, req, res, next) => {
-	console.error(err.stack);
-	res.status(500).json({message: "The server encountered an error!"});
-});*/
 
 // start the Express server
 const server = app.listen(port);
