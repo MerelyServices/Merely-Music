@@ -1,31 +1,67 @@
+import { ObjectId, Timestamp } from "mongodb";
 
-
-class PassportLink {
-	public AppId:number;
-	public Secret:string;
-	public CallbackUrl:string;
-
-	public constructor(appId:number, secret:string, callbackUrl:string) {
-		this.AppId = appId;
-		this.Secret = secret;
-		this.CallbackUrl = callbackUrl;
-		return this;
-	}
+export interface Artist {
+  _id: ObjectId,
+  name: string,
+  aka?: string[],
+  bio?: string,
+  artwork?: string,
 }
 
-class PassportUser {
-	public Id:number;
-	public Token:string;
-	public Username:string;
-	public ProfileUrl:string;
-	public Email:string;
-	public EmailVerified:boolean;
-	public Admin:boolean;
-	public Banned:boolean;
+export interface Album {
+  _id: ObjectId,
+  name: string,
+  artist: ObjectId,
+  // contributing artists: query
+  // songs: query
+  artwork?: string
 }
 
-interface AuthSessions{
-  [key:string]:PassportUser
+export interface Genre {
+  _id: ObjectId,
+  name: string
 }
 
-export { PassportLink, PassportUser, AuthSessions }
+export interface Metadata {
+  _id: ObjectId,
+  title: string,
+  artists: ObjectId[],
+  position?: number,
+  album: ObjectId,
+  added: Date,
+  published: Date,
+  genres: ObjectId[],
+  explicit: boolean
+}
+
+export interface UserPreferences {
+
+}
+
+export type UserRatings = {song:ObjectId, value:-1|1}[]
+
+export interface User {
+  _id: ObjectId,
+  id: string,
+  username: string,
+  ratings: UserRatings,
+  preferences: UserPreferences
+}
+
+export interface Playlist {
+  _id: ObjectId,
+  owner: ObjectId,
+  collaborators?: ObjectId[],
+  name: string,
+  description?: string,
+  songs: ObjectId[]
+}
+
+export interface Song {
+  _id: ObjectId,
+  owners: {owner:ObjectId, metadata: ObjectId}[],
+  quality: {codec: 'mp3'|'aac'|'flac', bitrate:number},
+  hash: string,
+  acoustid?: string,
+  artwork?: string
+}

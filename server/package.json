@@ -4,6 +4,7 @@
   "description": "Server for merely music, connects to database and handles streaming / uploading",
   "main": "dist/server.js",
   "scripts": {
+    "populate": "ts-node tools/exampledata.ts",
     "build": "tsc --project tsconfig.json",
     "predev": "npm run build",
     "dev": "npx nodemon ."
