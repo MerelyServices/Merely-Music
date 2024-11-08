@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "app",
-    "slug": "app",
-    "version": "1.0.0",
-    "orientation": "portrait",
+    "name": "Merely Music",
+    "slug": "Merely Music",
+    "version": "0.0.0",
+    "orientation": "automatic",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
