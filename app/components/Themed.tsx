@@ -5,8 +5,9 @@
 
 import { Text as DefaultText, View as DefaultView } from 'react-native';
 
-import Colors from '@/constants/Colors';
+import { Theme } from '@/constants/Colors';
 import { useColorScheme } from './useColorScheme';
+import { baseStyles as styles } from '@/constants/Stylesheet';
 
 type ThemeProps = {
   lightColor?: string;
@@ -18,7 +19,7 @@ export type ViewProps = ThemeProps & DefaultView['props'];
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
-  colorName: keyof typeof Colors.light & keyof typeof Colors.dark
+  colorName: keyof typeof Theme.light & keyof typeof Theme.dark
 ) {
   const theme = useColorScheme() ?? 'light';
   const colorFromProps = props[theme];
@@ -26,7 +27,7 @@ export function useThemeColor(
   if (colorFromProps) {
     return colorFromProps;
   } else {
-    return Colors[theme][colorName];
+    return Theme[theme][colorName];
   }
 }
 
@@ -42,4 +43,8 @@ export function View(props: ViewProps) {
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
+}
+
+export function Spacer() {
+  return <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />;
 }

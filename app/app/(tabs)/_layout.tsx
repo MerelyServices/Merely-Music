@@ -3,9 +3,10 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import Colors from '@/constants/Colors';
+import { Theme } from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import { baseStyles } from '@/constants/Stylesheet';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -23,7 +24,7 @@ function headerRight() {
         <FontAwesome
           name="info-circle"
           size={35}
-          color={Colors[colorScheme ?? 'light'].text}
+          color={Theme[colorScheme ?? 'light'].text}
           style={{ marginTop:-2.75, ...styles.headerButton }}
         />
       </TouchableOpacity>
@@ -33,7 +34,7 @@ function headerRight() {
         <FontAwesome
           name="user-circle"
           size={30}
-          color={Colors[colorScheme ?? 'light'].text}
+          color={Theme[colorScheme ?? 'light'].text}
           style={styles.headerButton}
         />
       </TouchableOpacity>
@@ -47,7 +48,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Theme[colorScheme ?? 'light'].tint,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
@@ -72,17 +73,14 @@ export default function TabLayout() {
   );
 }
 
-const styles = StyleSheet.create({
-  headerRight: {
-    flexDirection: 'row',
-  },
-  headerButton: {
-    marginRight: 15,
-  },
-  toolbarIcon: {
-    marginBottom: -1,
-    paddingRight: 3,
-    width: 34,
-    textAlign: 'center',
-  }
-})
+const styles = {
+  ...baseStyles,
+  ...StyleSheet.create({
+    toolbarIcon: {
+      marginBottom: -1,
+      paddingRight: 3,
+      width: 34,
+      textAlign: 'center',
+    }
+  })
+}

@@ -1,7 +1,17 @@
 const tintColorLight = '#2f95dc';
 const tintColorDark = '#fff';
 
+// Colour palette; https://coolors.co/palette/d72638-6091F3-a014af-140f2d-000000
+
 export default {
+  danger: '#D72638',
+  action: '#6091F3',
+  theme: '#A014AF',
+  fg: '#140F2D',
+  bg: '#000000',
+};
+
+export const Theme = {
   light: {
     text: '#000',
     background: '#fff',
@@ -16,4 +26,4 @@ export default {
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
   },
-};
+}

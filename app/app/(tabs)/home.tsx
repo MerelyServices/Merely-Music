@@ -1,6 +1,7 @@
-import { FlatList, ScrollView, StyleSheet, VirtualizedList } from 'react-native';
+import { ScrollView } from 'react-native';
 
-import { Text, View } from '@/components/Themed';
+import { Spacer, Text, View } from '@/components/Themed';
+import { baseStyles } from '@/constants/Stylesheet';
 
 const data = 'T,e,s,t,i,n,g'.split(',');
 function renderItem(item:string) {
@@ -17,29 +18,16 @@ export default function TabOneScreen() {
       <View style={styles.container}>
         <Text style={styles.title}>Playlists</Text>
         {data.map(renderItem)}
-        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+        <Spacer/>
         <Text style={styles.title}>Liked songs</Text>
         {data.map(renderItem)}
-        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+        <Spacer/>
         <Text style={styles.title}>Top Artists</Text>
         {data.map(renderItem)}
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginHorizontal: 30,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginVertical: 14,
-  },
-  separator: {
-    marginTop: 30,
-    height: 1,
-    width: '100%',
-  },
-});
+const styles = {
+  ...baseStyles
+}
