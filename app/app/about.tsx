@@ -26,10 +26,10 @@ export default function AboutScreen() {
         </ExternalLink>
         <Spacer/>
         <Text style={styles.smallTitle}>Related projects</Text>
-        <ExternalLink href="https://passport.yiays.com">
+        <ExternalLink style={styles.link} href="https://passport.yiays.com">
           <Text style={styles.linkText}>Passport</Text>
         </ExternalLink>
-        <ExternalLink href="https://meme.yiays.com">
+        <ExternalLink style={styles.link} href="https://meme.yiays.com">
           <Text style={styles.linkText}>MemeDB</Text>
         </ExternalLink>
         {/* Use a light status bar on iOS to account for the black space above the modal */}

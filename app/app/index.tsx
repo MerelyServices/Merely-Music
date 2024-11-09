@@ -6,7 +6,7 @@ import { ExternalLink } from '@/components/ExternalLink';
 import { baseStyles } from '@/constants/Stylesheet';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '@/constants/Colors';
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 
 interface Slide {
   key: number,
@@ -51,12 +51,17 @@ export default function AboutScreen() {
   return (
     <LinearGradient style={styles.root} colors={['#813694', '#454B9F']} start={{x:0, y:0}} end={{x:1,y:1}}>
       <AppIntroSlider 
-        renderItem={renderItem} data={slides}
+        renderItem={renderItem} data={slides} showPrevButton={true}
         onDone={()=>router.push('/(tabs)/home')}
       />
-      <ExternalLink href="https://passport.yiays.com/?redirect=merely.yiays.com/music/" style={styles.button}>
-        <Text style={styles.buttonText}>Sign in with Passport</Text>
-      </ExternalLink>
+      <View style={styles.buttonStack}>
+        <ExternalLink href="https://passport.yiays.com/?redirect=merely.yiays.com/music/" style={styles.button}>
+          <Text style={styles.buttonText}>Sign in with Passport</Text>
+        </ExternalLink>
+        <Link href="/(tabs)/home" style={styles.link}>
+          <Text style={{color: 'white'}}>Use Merely Music with local storage</Text>
+        </Link>
+      </View>
       <StatusBar hidden={true}/>
     </LinearGradient>
   );
@@ -70,7 +75,7 @@ const styles = {
     },
     slide: {
       flexGrow: 1,
-      paddingBottom: 150,
+      paddingBottom: 170,
       marginHorizontal: 30,
       alignItems: 'center',
     },
@@ -79,7 +84,8 @@ const styles = {
       justifyContent: 'center',
     },
     title: {
-      ...baseStyles.title,
+      fontSize: 32,
+      fontWeight: '100',
       marginTop: 0,
       color: '#ffffff',
       textAlign: 'center',
@@ -94,12 +100,16 @@ const styles = {
       height: '60%',
       opacity: 0.6,
     },
-    button: {
-      ...baseStyles.button,
+    buttonStack: {
       position: 'absolute',
       bottom: 100,
       left:0,
       right:0,
+      flex: 1,
+      alignItems: 'center',
+    },
+    button: {
+      ...baseStyles.button,
       backgroundColor: Colors.fg,
       textAlign: 'center',
     }

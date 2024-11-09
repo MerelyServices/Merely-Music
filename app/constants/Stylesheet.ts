@@ -42,7 +42,7 @@ export const baseStyles = StyleSheet.create({
     marginTop: 14,
   },
   link: {
-    marginTop: 14,
+    padding: 14,
   },
   linkText: {
     fontSize: 18,
