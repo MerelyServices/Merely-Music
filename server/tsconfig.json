@@ -1,4 +1,10 @@
 {
+	"ts-node": {
+		"files": true
+	},
+	"files": [
+		"src/custom.d.ts"
+	],
 	"compilerOptions": {
 			"module": "commonjs",
 			"esModuleInterop": true,

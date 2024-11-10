@@ -5,9 +5,10 @@
   "main": "dist/server.js",
   "scripts": {
     "populate": "ts-node tools/exampledata.ts",
-    "build": "tsc --project tsconfig.json",
-    "predev": "npm run build",
-    "dev": "npx nodemon ."
+    "build": "tsc",
+    "dev": "nodemon -e ts,json --exec ts-node src/server.ts",
+    "prestart": "npm run build",
+    "start": "node dist/server.js"
   },
   "repository": {
     "type": "git",
@@ -38,7 +39,8 @@
   "homepage": "https://github.com/MerelyServices/MerelyMusic#readme",
   "dependencies": {
     "dotenv": "^16.4.5",
-    "express": "^4.21.1",
+    "express": "^5.0.1",
+    "middleware-async": "^1.4.0",
     "mongodb": "^6.10.0",
     "nodemon": "^3.1.7"
   },
@@ -46,6 +48,7 @@
     "@types/express": "^5.0.0",
     "@types/mongodb": "^4.0.6",
     "@types/node": "^22.8.4",
+    "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   }
 }
