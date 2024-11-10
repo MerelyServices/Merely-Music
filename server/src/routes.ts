@@ -5,7 +5,7 @@ import { PassportLink, PassportProfile } from './passport';
 import { Album, Artist, Genre, Metadata, Playlist, Song, User } from './models';
 
 const routes = express.Router();
-routes.use(express.json())
+routes.use(express.json());
 
 export default function(passport:PassportLink){
   // define a route handler for the default home page

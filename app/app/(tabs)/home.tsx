@@ -2,7 +2,7 @@ import { ScrollView } from 'react-native';
 
 import { Spacer, Text, View } from '@/components/Themed';
 import { baseStyles } from '@/constants/Stylesheet';
-import { Playlists } from '@/components/DatabaseLists';
+import { Albums, Playlists } from '@/components/DatabaseLists';
 
 const data = 'T,e,s,t,i,n,g'.split(',');
 function renderItem(item:string) {
@@ -18,13 +18,16 @@ export default function TabOneScreen() {
     <ScrollView>
       <View style={styles.container}>
         <Text style={styles.title}>Playlists</Text>
-        <Playlists data={[]}></Playlists>
+        <Playlists data={[]} songs={{}}></Playlists>
         <Spacer/>
         <Text style={styles.title}>Liked songs</Text>
         {data.map(renderItem)}
         <Spacer/>
         <Text style={styles.title}>Top Artists</Text>
         {data.map(renderItem)}
+        <Spacer/>
+        <Text style={styles.title}>Top Albums</Text>
+        <Albums data={[]} artists={{}}/>
       </View>
     </ScrollView>
   );
