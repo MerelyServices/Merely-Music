@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { Image, ImageURISource, StyleSheet, Text, View } from 'react-native';
+import { Link, router } from 'expo-router';
 import AppIntroSlider from 'react-native-app-intro-slider';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { ExternalLink } from '@/components/ExternalLink';
 import { baseStyles } from '@/constants/Stylesheet';
-import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '@/constants/Colors';
-import { Link, router } from 'expo-router';
 
 interface Slide {
   key: number,

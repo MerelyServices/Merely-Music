@@ -1,4 +1,8 @@
-import { ObjectId } from "mongodb";
+import ObjectId from "mongo-objectid";
+
+export interface ObjectIdMap<T> {
+  [id: string]: T
+}
 
 export interface Artist {
   _id: ObjectId,

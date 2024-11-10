@@ -58,6 +58,7 @@ export default function TabLayout() {
         options={{
           title: 'Merely Music',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarLabel: 'Home',
           headerRight: headerRight,
         }}
       />

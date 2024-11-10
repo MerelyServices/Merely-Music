@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { Spacer, Text, View } from '@/components/Themed';
+import { baseStyles } from '@/constants/Stylesheet';
 
 export default function TabTwoScreen() {
   return (
@@ -12,18 +13,5 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+  ...baseStyles,
 });
