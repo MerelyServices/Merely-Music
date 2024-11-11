@@ -3,6 +3,7 @@ import { ScrollView } from 'react-native';
 import { Spacer, Text, View } from '@/components/Themed';
 import { baseStyles } from '@/constants/Stylesheet';
 import { Albums, Playlists } from '@/components/DatabaseLists';
+import { StatusBar } from 'expo-status-bar';
 
 const data = 'T,e,s,t,i,n,g'.split(',');
 function renderItem(item:string) {
@@ -13,7 +14,7 @@ function renderItem(item:string) {
   )
 }
 
-export default function TabOneScreen() {
+export default function Home() {
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -29,6 +30,7 @@ export default function TabOneScreen() {
         <Text style={styles.title}>Top Albums</Text>
         <Albums data={[]} artists={{}}/>
       </View>
+      <StatusBar hidden={false}/>
     </ScrollView>
   );
 }
