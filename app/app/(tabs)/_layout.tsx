@@ -47,6 +47,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      initialRouteName='home'
       screenOptions={{
         tabBarActiveTintColor: Theme[colorScheme ?? 'light'].tint,
         // Disable the static render of the header on web
