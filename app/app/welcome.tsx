@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Image, ImageURISource, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ImageURISource, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Link, router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppIntroSlider from 'react-native-app-intro-slider';
@@ -33,9 +33,13 @@ const slides = [
 ] as Slide[]
 
 function renderItem({ item, dimensions }: {item: Slide} & any) {
+  // Specifying height can cause unintended consequences, so only do it when we have to
+  // - Still not ideal. Not all window resize events trigger renderItem.
+  let extraStyle:any = {};
+  if(Platform.OS=='web')
+    extraStyle['height'] = dimensions.height;
   return (
-    // Using dimensions is an ugly hack to get web working
-    <View key={item.key} style={{ ...styles.slide, height:dimensions.height }}>
+    <View key={item.key} style={{ ...styles.slide, ...extraStyle }}>
       <View style={styles.cell}>
         <Text style={styles.title}>{item.title}</Text>
       </View>
@@ -73,7 +77,7 @@ export default function WelcomeScreen() {
             <ExternalLink href="https://passport.yiays.com/?redirect=merely.yiays.com/music/" style={styles.button}>
               <Text style={styles.buttonText}>Sign in with Passport</Text>
             </ExternalLink>
-            <Link href="/(tabs)/home" style={styles.link}>
+            <Link href="/(tabs)/home" style={styles.link} onPress={setWelcomeDone}>
               <Text style={styles.buttonText}>Use Merely Music with local storage</Text>
             </Link>
           </View>
