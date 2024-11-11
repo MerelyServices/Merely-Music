@@ -8,6 +8,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ExternalLink } from '@/components/ExternalLink';
 import { baseStyles } from '@/constants/Stylesheet';
 import Colors from '@/constants/Colors';
+import { AuthContext } from '@/context/authenticator';
+
 interface Slide {
   key: number,
   title: string,
@@ -56,6 +58,17 @@ export default function WelcomeScreen() {
   return (
     <LinearGradient style={styles.root} colors={['#813694', '#454B9F']} start={{x:0, y:0}} end={{x:1,y:1}}>
       <AppIntroSlider renderItem={renderItem} data={slides} showPrevButton={true} onDone={setWelcomeDone}/>
+      <AuthContext.Consumer>
+        { ctx => ctx?.token ? 
+          <View style={styles.buttonStack}>
+            <ExternalLink href="https://passport.yiays.com/profile/" style={styles.button}>
+              <Text style={styles.buttonText}>Signed in as {ctx.token}</Text>
+            </ExternalLink>
+            <TouchableOpacity onPress={ctx.signOut} style={styles.link}>
+              <Text style={styles.buttonText}>Sign out</Text>
+            </TouchableOpacity>
+          </View>
+        :
           <View style={styles.buttonStack}>
             <ExternalLink href="https://passport.yiays.com/?redirect=merely.yiays.com/music/" style={styles.button}>
               <Text style={styles.buttonText}>Sign in with Passport</Text>
@@ -64,6 +77,8 @@ export default function WelcomeScreen() {
               <Text style={styles.buttonText}>Use Merely Music with local storage</Text>
             </Link>
           </View>
+        }
+      </AuthContext.Consumer>
       <StatusBar hidden={true}/>
     </LinearGradient>
   );

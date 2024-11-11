@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet, Image, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
+import { Link } from 'expo-router';
 
 import { Spacer, Text, View } from '@/components/Themed';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -18,8 +19,11 @@ export default function AboutScreen() {
           Merely is a cloud music service which helps organize downloaded music, and keep your library in sync across all of your devices.
         </Text>
         <Text style={{ ...styles.note, fontStyle:'italic' }}>
-          Sign in is powered by Passport, learn more in the Account screen.
+          Sign in is powered by Passport, learn more on the Account screen.
         </Text>
+        <Link style={styles.link} href="/welcome">
+          <Text style={styles.linkText}>View the welcome screen</Text>
+        </Link>
         <Spacer/>
         <ExternalLink href="https://yiays.com" style={styles.link}>
           <Text style={styles.linkText}>Created by Yiays</Text>
