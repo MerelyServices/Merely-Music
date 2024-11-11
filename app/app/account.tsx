@@ -13,14 +13,14 @@ export default function AboutScreen() {
         <AuthContext.Consumer>
           { ctx => ctx?.token ? <>
             <Image style={styles.logo} source={require('../assets/images/user.png')} resizeMode='contain'/>
-            <Text style={styles.title}>{ctx.token}</Text>
-            <Text style={styles.subtitle}>Email</Text>
+            <Text style={styles.title}>{ctx.profile?.username || 'Unknown username'}</Text>
+            <Text style={styles.subtitle}>{(ctx.profile?.email || 'Unknown email')}</Text>
             <Spacer/>
             <Text style={styles.note}>
               This is your Passport account. Sign in with this account on other devices to sync your music, playlists, and metadata.
             </Text>
             <Spacer/>
-            <ExternalLink href='https://passport.yiays.com' style={styles.link}>
+            <ExternalLink href='https://passport.yiays.com/profile/' style={styles.link}>
               <Text style={styles.linkText}>Manage your Passport account</Text>
             </ExternalLink>
             <TouchableOpacity onPress={() => ctx.signOut} style={styles.link}>

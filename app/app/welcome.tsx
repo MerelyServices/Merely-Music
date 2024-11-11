@@ -66,7 +66,7 @@ export default function WelcomeScreen() {
         { ctx => ctx?.token ? 
           <View style={styles.buttonStack}>
             <ExternalLink href="https://passport.yiays.com/profile/" style={styles.button}>
-              <Text style={styles.buttonText}>Signed in as {ctx.token}</Text>
+              <Text style={styles.buttonText}>Signed in as {ctx.profile?.username || 'Unknown'}</Text>
             </ExternalLink>
             <TouchableOpacity onPress={ctx.signOut} style={styles.link}>
               <Text style={styles.buttonText}>Sign out</Text>
@@ -124,7 +124,7 @@ const styles = {
     },
     buttonStack: {
       position: 'absolute',
-      bottom: 100,
+      bottom: 60,
       left:0,
       right:0,
       flex: 1,

@@ -63,5 +63,9 @@ export const baseStyles = StyleSheet.create({
   },
   buttonText: {
     color: 'white'
-  }
+  },
+  artworkImage: {
+    width: 192,
+    height: 192,
+  },
 });

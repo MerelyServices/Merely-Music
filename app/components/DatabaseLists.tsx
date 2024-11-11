@@ -56,9 +56,5 @@ const styles = StyleSheet.create({
     top: 50,
     opacity: 0.8,
   },
-  artworkImage: {
-    width: 192,
-    height: 192,
-  },
   ...baseStyles
 });
