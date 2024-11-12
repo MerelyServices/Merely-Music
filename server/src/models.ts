@@ -48,6 +48,8 @@ export interface User {
   preferences: UserPreferences
 }
 
+export type OtherUser = Pick<User, '_id'|'username'>;
+
 export interface Playlist {
   _id: ObjectId,
   owner: ObjectId,
@@ -64,4 +66,14 @@ export interface Song {
   hash: string,
   acoustid?: string,
   artwork?: string
+}
+
+export interface DbCache {
+  artists: Artist[],
+  albums: Album[],
+  genres: Genre[],
+  metadata: Metadata[],
+  users: OtherUser[],
+  playlists: Playlist[],
+  lastSync: number,
 }
