@@ -1,0 +1,54 @@
+{
+  "name": "server",
+  "version": "0.0.1",
+  "description": "Server for merely music, connects to database and handles streaming / uploading",
+  "main": "dist/server.js",
+  "scripts": {
+    "populate": "ts-node tools/exampledata.ts",
+    "build": "tsc",
+    "dev": "nodemon -e ts,json --exec ts-node src/server.ts",
+    "prestart": "npm run build",
+    "start": "node dist/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MerelyServices/MerelyMusic.git"
+  },
+  "keywords": [
+    "music",
+    "streaming",
+    "service",
+    "android",
+    "ios",
+    "web",
+    "firebase",
+    "react",
+    "react",
+    "native",
+    "react",
+    "native",
+    "web",
+    "server",
+    "host"
+  ],
+  "author": "yiays",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MerelyServices/MerelyMusic/issues"
+  },
+  "homepage": "https://github.com/MerelyServices/MerelyMusic#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^5.0.1",
+    "middleware-async": "^1.4.0",
+    "mongodb": "^6.10.0",
+    "nodemon": "^3.1.7"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/mongodb": "^4.0.6",
+    "@types/node": "^22.8.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}

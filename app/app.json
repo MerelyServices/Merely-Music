@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "Merely Music",
+    "slug": "Merely-Music",
+    "version": "0.0.0",
+    "orientation": "default",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#66439A"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#66439A"
+      },
+      "package": "com.yiays.MerelyMusic"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "533bf18b-8dc9-4524-81fd-27e6f7ae3345"
+      }
+    },
+    "owner": "yiays"
+  }
+}
