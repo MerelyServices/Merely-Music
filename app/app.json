@@ -13,7 +13,8 @@
       "backgroundColor": "#66439A"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yiays.MerelyMusic"
     },
     "android": {
       "adaptiveIcon": {
