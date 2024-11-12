@@ -1,7 +1,19 @@
 import ObjectId from "mongo-objectid";
 
+export interface BaseItem {
+  _id: ObjectId
+}
+
 export interface ObjectIdMap<T> {
   [id: string]: T
+}
+
+export function mapObjectId<T extends BaseItem>(arr:T[]): ObjectIdMap<T>[] {
+  return arr.map((val) => {
+    let out = {} as ObjectIdMap<T>;
+    out[val._id.toString()] = val;
+    return out;
+  });
 }
 
 export interface Artist {
@@ -38,11 +50,11 @@ export interface Metadata {
   explicit: boolean
 }
 
-export interface UserPreferences {
+interface UserPreferences {
 
 }
 
-export type UserRatings = {song:ObjectId, value:-1|1}[]
+type UserRatings = { song:ObjectId, value:-1|1 }[]
 
 export interface User {
   _id: ObjectId,
@@ -51,6 +63,8 @@ export interface User {
   ratings: UserRatings,
   preferences: UserPreferences
 }
+
+export type OtherUser = Pick<User, '_id'|'username'>
 
 export interface Playlist {
   _id: ObjectId,
@@ -68,4 +82,14 @@ export interface Song {
   hash: string,
   acoustid?: string,
   artwork?: string
+}
+
+export interface DbCache {
+  artists: Artist[],
+  albums: Album[],
+  genres: Genre[],
+  metadata: Metadata[],
+  users: OtherUser[],
+  playlists: Playlist[],
+  lastSync: number,
 }

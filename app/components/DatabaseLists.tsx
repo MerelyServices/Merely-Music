@@ -1,23 +1,24 @@
 import React from 'react';
 
-import { ObjectIdMap, Album, Playlist, Artist, Song } from '@/models/database';
+import { ObjectIdMap, Album, Playlist, Artist, Metadata } from '@/models/database';
 import { View, Text, Image, StyleSheet, FlatList, ListRenderItemInfo } from 'react-native';
 import { Link } from 'expo-router';
 
 import { baseStyles } from '@/constants/Stylesheet';
 
 export function Playlists(
-  props: Omit<React.ComponentProps<any>, 'data'> & { data: Playlist[], songs: ObjectIdMap<Song[]> }
+  props: Omit<React.ComponentProps<any>, 'data'> & { data: Playlist[], meta: ObjectIdMap<Metadata>[] }
 ) {
   function renderItem(info:ListRenderItemInfo<Playlist>) {
     return (
       <View key={info.item._id.toString()} style={styles.listItem}>
         {/*<Link href={'/playlist/'+playlist._id.toString()}>*/}
-          <Image style={styles.playlistImage} src={require('../assets/images/playlist.png')}/>
-          <Image style={styles.playlistSong} src={require('../assets/images/track.png')}/>
-          <Image style={{ ...styles.playlistSong, left:54, opacity:0.6 }} src={require('../assets/images/track.png')}/>
-          <Image style={{ ...styles.playlistSong, left:116, opacity:0.4 }} src={require('../assets/images/track.png')}/>
+          <Image style={styles.playlistImage} source={require('../assets/images/playlist.png')}/>
+          <Image style={styles.playlistSong} source={require('../assets/images/song.png')}/>
+          <Image style={{ ...styles.playlistSong, left:54, opacity:0.6 }} source={require('../assets/images/song.png')}/>
+          <Image style={{ ...styles.playlistSong, left:116, opacity:0.4 }} source={require('../assets/images/song.png')}/>
           <Text>{info.item.name}</Text>
+          <Text style={styles.subtitle}>{info.item.songs.length} songs</Text>
         {/*</Link>*/}
       </View>
     );
@@ -32,9 +33,9 @@ export function Albums(
     return (
       <View key={info.item._id.toString()} style={styles.listItem}>
         {/*<Link href={'/playlist/'+playlist._id.toString()}>*/}
-          <Image style={styles.artworkImage} src={require('../assets/images/album.png')}/>
+          <Image style={styles.artworkImage} source={require('../assets/images/album.png')}/>
           <Text>{info.item.name}</Text>
-          <Text>{props.artists[info.item.artist.toString()].name}</Text>
+          <Text style={styles.subtitle}>{props.artists[info.item.artist.toString()].name}</Text>
         {/*</Link>*/}
       </View>
     );
