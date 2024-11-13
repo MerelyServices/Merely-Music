@@ -39,7 +39,7 @@ export const baseStyles = StyleSheet.create({
   separator: {
     height: 1,
     width: '100%',
-    marginTop: 14,
+    marginBottom: 14,
   },
   link: {
     padding: 14,

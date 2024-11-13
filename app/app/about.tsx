@@ -6,8 +6,13 @@ import { Link } from 'expo-router';
 import { Spacer, Text, View } from '@/components/Themed';
 import { ExternalLink } from '@/components/ExternalLink';
 import { baseStyles } from '@/constants/Stylesheet';
+import { FontAwesome } from '@expo/vector-icons';
+import { Theme } from '@/constants/Colors';
+import { useColorScheme } from '@/components/useColorScheme';
 
 export default function AboutScreen() {
+  const colorScheme = useColorScheme();
+
   return (
     <ScrollView style={{ flexGrow:0 }}>
       <View style={styles.container}>
@@ -19,10 +24,10 @@ export default function AboutScreen() {
           Merely is a cloud music service which helps organize downloaded music, and keep your library in sync across all of your devices.
         </Text>
         <Text style={{ ...styles.note, fontStyle:'italic' }}>
-          Sign in is powered by Passport, learn more on the Account screen.
+          Sign in is powered by Passport, learn more on the <FontAwesome name="user-circle" color={Theme[colorScheme ?? 'light'].text}/> screen.
         </Text>
         <Link style={styles.link} href="/welcome">
-          <Text style={styles.linkText}>View the welcome screen</Text>
+          <Text style={styles.linkText}>Revisit first time setup</Text>
         </Link>
         <Spacer/>
         <ExternalLink href="https://yiays.com" style={styles.link}>
