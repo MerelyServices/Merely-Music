@@ -2,6 +2,8 @@ import express from "express";
 import asyncMiddleware from "middleware-async";
 import dotenv from 'dotenv';
 import cors from 'cors';
+import * as winston from 'winston';
+import * as expressWinston from 'express-winston';
 
 import { Conn } from './mongo.helper';
 import routesBuilder from './routes';
@@ -14,6 +16,13 @@ const dburl = process.env.DBURL;
 const port = Number(process.env.PORT);
 const passport = new PassportLink('https://passport.yiays.com/api');
 // Add middleware
+// Request tracking
+app.use(expressWinston.logger({
+  transports: [new winston.transports.Console()],
+  format: winston.format.combine(winston.format.colorize(),winston.format.simple()),
+  meta: false,
+  expressFormat: true
+}));
 // Cross Origin Request
 if(process.env.CORS)
   app.use(cors());
@@ -21,11 +30,13 @@ if(process.env.CORS)
 app.use(asyncMiddleware(async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1]; // Bearer <token>
   if(!token) {
+    console.log("Denied access because token wasn't provided.")
     return res.status(401).json({message: "This API requires a token."});
   }
   else {
     const profile = await passport.getProfile(token, Conn.db);
     if(profile == false) {
+      console.log("Denied access because token", token, "is invalid.")
       return res.status(401).json({message: "Token is invalid."});
     }else{
       req.token = token;

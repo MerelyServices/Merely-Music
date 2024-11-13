@@ -41,6 +41,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^5.0.1",
+    "express-winston": "^4.2.0",
     "middleware-async": "^1.4.0",
     "mongodb": "^6.10.0",
     "nodemon": "^3.1.7"

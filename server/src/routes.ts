@@ -2,7 +2,7 @@ import * as express from 'express';
 import { FindOptions, ObjectId } from 'mongodb';
 import { Conn } from './mongo.helper';
 import { PassportLink, PassportProfile } from './passport';
-import { Album, Artist, DbCache, Genre, Metadata, OtherUser, Playlist, Song, User } from './models';
+import { Album, Artist, UserDatabase, Genre, Metadata, OtherUser, Playlist, Song, User } from './models';
 
 const routes = express.Router();
 routes.use(express.json());
@@ -173,7 +173,7 @@ export default function (passport: PassportLink): express.Router {
     // TODO: readonly for now
     const songs = await getSongs(req.token);
     const userId = passport.sessionUsers[req.token]._id;
-    const result: Omit<DbCache, 'lastSync'> = {
+    const result: Omit<UserDatabase, 'lastSync'> = {
       artists: await getArtists(),
       albums: await getAlbums(),
       genres: await getGenres(),
