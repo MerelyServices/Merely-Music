@@ -1,7 +1,7 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { Theme } from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -70,6 +70,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="cloud-download" color={color} />,
           headerRight: headerRight,
         }}
+        redirect={(Platform.OS == 'web')}
       />
     </Tabs>
   );
