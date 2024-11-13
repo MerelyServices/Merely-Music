@@ -8,7 +8,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ExternalLink } from '@/components/ExternalLink';
 import { baseStyles } from '@/constants/Stylesheet';
 import Colors from '@/constants/Colors';
-import { AuthContext } from '@/context/authenticator';
+import { DbContext } from '@/context/database';
+import { loginUrl } from '@/components/LoginHandler';
 
 interface Slide {
   key: number,
@@ -62,7 +63,7 @@ export default function WelcomeScreen() {
   return (
     <LinearGradient style={styles.root} colors={['#813694', '#454B9F']} start={{x:0, y:0}} end={{x:1,y:1}}>
       <AppIntroSlider renderItem={renderItem} data={slides} showPrevButton={true} onDone={setWelcomeDone}/>
-      <AuthContext.Consumer>
+      <DbContext.Consumer>
         { ctx => ctx?.token ? 
           <View style={styles.buttonStack}>
             <ExternalLink href="https://passport.yiays.com/profile/" style={styles.button}>
@@ -74,7 +75,7 @@ export default function WelcomeScreen() {
           </View>
         :
           <View style={styles.buttonStack}>
-            <ExternalLink href="https://passport.yiays.com/?redirect=merely.yiays.com/music/" style={styles.button}>
+            <ExternalLink href={loginUrl} style={styles.button}>
               <Text style={styles.buttonText}>Sign in with Passport</Text>
             </ExternalLink>
             <Link href="/(tabs)/home" style={styles.link} onPress={setWelcomeDone}>
@@ -82,7 +83,7 @@ export default function WelcomeScreen() {
             </Link>
           </View>
         }
-      </AuthContext.Consumer>
+      </DbContext.Consumer>
       <StatusBar hidden={true}/>
     </LinearGradient>
   );

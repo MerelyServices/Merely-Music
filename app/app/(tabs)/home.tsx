@@ -4,8 +4,11 @@ import { Spacer, Text, View } from '@/components/Themed';
 import { baseStyles } from '@/constants/Stylesheet';
 import { Albums, Playlists } from '@/components/DatabaseLists';
 import { StatusBar } from 'expo-status-bar';
-import { AuthContext } from '@/context/authenticator';
+import { DbContext } from '@/context/database';
 import { mapObjectId } from '@/models/database';
+import { FontAwesome } from '@expo/vector-icons';
+import { Theme } from '@/constants/Colors';
+import { useColorScheme } from '@/components/useColorScheme';
 
 const data = 'T,e,s,t,i,n,g'.split(',');
 function renderItem(item:string) {
@@ -17,27 +20,34 @@ function renderItem(item:string) {
 }
 
 export default function Home() {
+  const colorScheme = useColorScheme();
+
   return (
     <ScrollView>
-      <AuthContext.Consumer>
-        { ctx => ctx?.dbCache ? <>
-          <View style={styles.container}>
-            <Text style={styles.title}>Playlists</Text>
-            <Playlists data={ctx.dbCache.playlists} meta={mapObjectId(ctx.dbCache.metadata)}/>
-            <Spacer/>
-            <Text style={styles.title}>Liked songs</Text>
-            {data.map(renderItem)}
-            <Spacer/>
-            <Text style={styles.title}>Top Artists</Text>
-            {data.map(renderItem)}
-            <Spacer/>
-            <Text style={styles.title}>Top Albums</Text>
-            <Albums data={[]} artists={{}}/>
-          </View>
-        </> : <>
-          <Text>Loading your library...</Text>
-        </> }
-      </AuthContext.Consumer>
+      <View style={styles.container}>
+        <Text style={styles.title}>Library</Text>
+        <Spacer/>
+        <DbContext.Consumer>
+          { ctx => ctx?.localDb? <>
+              <Text style={styles.smallTitle}>Playlists</Text>
+              <Playlists data={ctx.localDb.playlists} meta={mapObjectId(ctx.localDb.metadata)}/>
+              <Spacer/>
+              <Text style={styles.smallTitle}>Liked songs</Text>
+              {data.map(renderItem)}
+              <Spacer/>
+              <Text style={styles.smallTitle}>Top Artists</Text>
+              {data.map(renderItem)}
+              <Spacer/>
+              <Text style={styles.smallTitle}>Top Albums</Text>
+              <Albums data={[]} artists={{}}/>
+          </> : (ctx?.token? <>
+            <Text style={styles.smallTitle}>Loading...</Text>
+          </> : <>
+            <Text style={styles.smallTitle}>Not signed in</Text>
+            <Text style={styles.paragraph}>Add your account using the <FontAwesome name="user-circle" color={Theme[colorScheme ?? 'light'].text}/> screen and start syncing your library everywhere.</Text>
+          </> )}
+        </DbContext.Consumer>
+      </View>
       <StatusBar hidden={false}/>
     </ScrollView>
   );

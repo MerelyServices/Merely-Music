@@ -4,13 +4,14 @@ import { Platform, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react
 import { Spacer, Text, View } from '@/components/Themed';
 import { ExternalLink } from '@/components/ExternalLink';
 import { baseStyles } from '@/constants/Stylesheet';
-import { AuthContext } from '@/context/authenticator';
+import { DbContext } from '@/context/database';
+import { loginUrl } from '@/components/LoginHandler';
 
 export default function AboutScreen() {
   return (
     <ScrollView style={{ flexGrow:0 }}>
       <View style={styles.container}>
-        <AuthContext.Consumer>
+        <DbContext.Consumer>
           { ctx => ctx?.user ? <>
             <Image style={styles.logo} source={require('../assets/images/user.png')} resizeMode='contain'/>
             <Text style={styles.title}>{ctx.user?.username || 'Unknown username'}</Text>
@@ -23,7 +24,7 @@ export default function AboutScreen() {
             <ExternalLink href='https://passport.yiays.com/profile/' style={styles.link}>
               <Text style={styles.linkText}>Manage your Passport account</Text>
             </ExternalLink>
-            <TouchableOpacity onPress={() => ctx.signOut} style={styles.link}>
+            <TouchableOpacity onPress={() => ctx.signOut()} style={styles.link}>
               <Text style={styles.dangerLinkText}>Sign out</Text>
             </TouchableOpacity>
           </>:<>
@@ -34,11 +35,11 @@ export default function AboutScreen() {
               Sign in with Passport to sync your music, playlists, and metadata to other devices.
             </Text>
             <Spacer/>
-            <ExternalLink href="https://passport.yiays.com/?redirect=merely.yiays.com/music/" style={styles.button}>
+            <ExternalLink href={loginUrl} style={styles.button}>
               <Text style={styles.linkText}>Sign in with Passport</Text>
             </ExternalLink>
           </>}
-        </AuthContext.Consumer>
+        </DbContext.Consumer>
         {/* Use a light status bar on iOS to account for the black space above the modal */}
         <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
       </View>

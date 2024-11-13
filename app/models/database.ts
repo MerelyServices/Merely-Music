@@ -84,7 +84,7 @@ export interface Song {
   artwork?: string
 }
 
-export interface DbCache {
+export interface UserDatabase {
   artists: Artist[],
   albums: Album[],
   genres: Genre[],
