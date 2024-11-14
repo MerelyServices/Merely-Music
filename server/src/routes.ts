@@ -174,15 +174,13 @@ export default function (passport: PassportLink): express.Router {
     const userId = passport.sessionUsers[req.token]._id;
     const ownedSongMetadataIds = songs.reduce<ObjectId[]>((out, song) => {
       const songMetadata = song.owners.reduce<ObjectId|null>((out, data) => {
-        if(userId.toString() == data.owner.toString()) {
+        if(userId.toString() == data.owner.toString())
           out = data.metadata;
-          return out;
-        }
-      }, null);
-      if(songMetadata) {
-        out.push(songMetadata);
         return out;
-      }
+      }, null);
+      if(songMetadata)
+        out.push(songMetadata);
+      return out;
     }, []) || [];
     const result: Omit<UserDatabase, 'lastSync'> = {
       artists: await getArtists(),
