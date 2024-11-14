@@ -50,7 +50,6 @@ export default function (passport: PassportLink): express.Router {
   }
 
   async function getSongsMetadata(ids:ObjectId[]): Promise<Metadata[]> {
-    // TODO: security
     const search = {
       _id: {$in: ids}
     };
@@ -173,11 +172,23 @@ export default function (passport: PassportLink): express.Router {
     // TODO: readonly for now
     const songs = await getSongs(req.token);
     const userId = passport.sessionUsers[req.token]._id;
+    const ownedSongMetadataIds = songs.reduce<ObjectId[]>((out, song) => {
+      const songMetadata = song.owners.reduce<ObjectId|null>((out, data) => {
+        if(userId.toString() == data.owner.toString()) {
+          out = data.metadata;
+          return out;
+        }
+      }, null);
+      if(songMetadata) {
+        out.push(songMetadata);
+        return out;
+      }
+    }, []) || [];
     const result: Omit<UserDatabase, 'lastSync'> = {
       artists: await getArtists(),
       albums: await getAlbums(),
       genres: await getGenres(),
-      metadata: await getSongsMetadata(songs.map(song => song._id)),
+      metadata: await getSongsMetadata(ownedSongMetadataIds),
       users: await getUsers(userId),
       playlists: await getPlaylists(req.token),
     }
