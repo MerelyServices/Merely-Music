@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-import { ObjectIdMap, Album, Playlist, Artist, Metadata } from '@/models/database';
+import { ObjectIdMap, Album, Playlist, Artist, Metadata, Song, ResolveObjects, mapObjectId } from '@/models/database';
 import { View, Image, StyleSheet, FlatList, ListRenderItemInfo } from 'react-native';
 import { Link } from 'expo-router';
 
 import { baseStyles } from '@/constants/Stylesheet';
 import { Text } from '@/components/Themed';
 import ObjectId from 'mongo-objectid';
+import { DbContext } from '@/context/database';
 
-type PropsData<T, R> = Omit<React.ComponentProps<any>, 'data'> & { data: T[], map: ObjectIdMap<R> };
+type PropsData<T> = Omit<React.ComponentProps<any>, 'data'> & { data: T[] };
 
-function PlaylistSongPreview(props: PropsData<ObjectId, Metadata>) {
+function PlaylistSongPreview(props: PropsData<ObjectId> & {songMeta: ObjectIdMap<Metadata>}) {
   return <>
     {props.data.slice(0, 3).reverse().map((songRef, i) => (
       <Image
@@ -22,14 +23,18 @@ function PlaylistSongPreview(props: PropsData<ObjectId, Metadata>) {
   </>
 }
 
-export function Playlists(props: PropsData<Playlist, Metadata>) {
+export function Playlists(props: PropsData<Playlist>) {
+  const dbparams = useContext(DbContext);
+  if(!dbparams || !dbparams.localDb?.metadata) return <></>;
+  const songMeta = mapObjectId(dbparams.localDb.metadata);
+
   function renderItem(info:ListRenderItemInfo<Playlist>) {
     return (
       <View key={info.item._id.toString()} style={styles.listItem}>
         {/*<Link href={'/playlist/'+playlist._id.toString()}>*/}
           <Image style={styles.playlistImage} source={require('../assets/images/playlist.png')}/>
-          <PlaylistSongPreview data={info.item.songs} map={props.map}/>
-          <Text style={styles.listItemName}>{info.item.name}</Text>
+          <PlaylistSongPreview data={info.item.songs} songMeta={songMeta}/>
+          <Text style={{ ...styles.listItemName, maxWidth:256 }}>{info.item.name}</Text>
           <Text style={styles.subtitle}>{info.item.songs.length} song{info.item.songs.length == 1? '': 's'}</Text>
         {/*</Link>*/}
       </View>
@@ -38,14 +43,18 @@ export function Playlists(props: PropsData<Playlist, Metadata>) {
   return <FlatList data={props.data} renderItem={renderItem} horizontal={true}/>;
 }
 
-export function Albums(props: PropsData<Album, Artist>) {
+export function Albums(props: PropsData<Album>) {
+  const dbparams = useContext(DbContext);
+  if(!dbparams || !dbparams.localDb?.metadata) return <></>;
+  const artists = mapObjectId(dbparams.localDb.artists);
+
   function renderItem(info:ListRenderItemInfo<Album>) {
     return (
       <View key={info.item._id.toString()} style={styles.listItem}>
         {/*<Link href={'/playlist/'+playlist._id.toString()}>*/}
           <Image style={styles.artworkImage} source={require('../assets/images/album.png')}/>
           <Text style={styles.listItemName}>{info.item.name}</Text>
-          <Text style={styles.subtitle}>{props.map[info.item.artist.toString()].name}</Text>
+          <Text style={styles.subtitle}>{artists[info.item.artist.toString()].name}</Text>
         {/*</Link>*/}
       </View>
     );
@@ -53,13 +62,37 @@ export function Albums(props: PropsData<Album, Artist>) {
   return <FlatList data={props.data} renderItem={renderItem} horizontal={true}/>;
 }
 
+export function Songs(props: PropsData<ObjectId>) {
+  const dbparams = useContext(DbContext);
+  if(!dbparams || !dbparams.localDb?.metadata) return <></>;
+  const songMeta = mapObjectId(dbparams.localDb.metadata);
+  const artists = mapObjectId(dbparams.localDb.artists);
+  const albums = mapObjectId(dbparams.localDb.albums);
+
+  function renderItem(songId:ObjectId) {
+    const artistNames = songMeta[songId.toString()].artists.map((artistId) => artists[artistId.toString()].name).join(', ');
+    return (
+      <View key={songMeta._id.toString()} style={styles.wideItem}>
+        <Image style={styles.wideItemArtwork} source={require('../assets/images/song.png')}/>
+        <Text style={styles.wideCol1}>{songMeta[songId.toString()].title}</Text>
+        <Text style={styles.wideCol2}>{artistNames}</Text>
+        <Text style={styles.wideCol3}>{albums[songMeta[songId.toString()].album.toString()].name}</Text>
+      </View>
+    )
+  }
+
+  return <>{props.data.map(renderItem)}</>
+}
+
 const styles = StyleSheet.create({
+  ...baseStyles,
   listItem: {
     position: 'relative',
   },
   listItemName: {
     marginTop: 8,
-    marginBottom: 12
+    marginBottom: 12,
+    maxWidth: 192,
   },
   playlistImage: {
     width: 256,
@@ -71,5 +104,28 @@ const styles = StyleSheet.create({
     width: 136,
     height: 136,
   },
-  ...baseStyles
+  wideItem: {
+    position: 'relative',
+    width: '100%',
+    height: 32,
+  },
+  wideItemArtwork: {
+    position: 'absolute',
+    top: 4,
+    left: 4,
+    width: 24,
+    height: 24,
+  },
+  wideCol1: {
+    left: 36,
+    right: '40%',
+  },
+  wideCol2: {
+    left: '40%',
+    right: '30%',
+  },
+  wideCol3: {
+    left: '70%',
+    right: 4,
+  }
 });

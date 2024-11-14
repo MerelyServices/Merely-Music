@@ -16,7 +16,6 @@ export interface DbContextParams {
   offline: boolean,
   signIn: (token: string, profile: string) => void,
   signOut: () => void,
-  apiCall: <T>(path:string) => Promise<T|number>,
   updateDb: (changes: UserDatabase) => void,
 }
 
@@ -276,7 +275,7 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
 
   return (
     <DbContext.Provider
-      value={{ token, passportProfile, user, localDb, offline, signIn, signOut, apiCall, updateDb }}
+      value={{ token, passportProfile, user, localDb, offline, signIn, signOut, updateDb }}
     >
       {children}
     </DbContext.Provider>

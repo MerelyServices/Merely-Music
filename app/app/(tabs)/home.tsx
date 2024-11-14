@@ -2,10 +2,10 @@ import { ScrollView } from 'react-native';
 
 import { Spacer, Text, View } from '@/components/Themed';
 import { baseStyles } from '@/constants/Stylesheet';
-import { Albums, Playlists } from '@/components/DatabaseLists';
+import { Albums, Playlists, Songs } from '@/components/DatabaseLists';
 import { StatusBar } from 'expo-status-bar';
 import { DbContext } from '@/context/database';
-import { filterByMetadata, mapObjectId } from '@/models/database';
+import { filterByMetadata, filterByRating, Metadata, ResolveObjects } from '@/models/database';
 import { FontAwesome } from '@expo/vector-icons';
 import { Theme } from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -21,14 +21,17 @@ export default function Home() {
         <DbContext.Consumer>
           { ctx => ctx?.localDb? <>
               <Text style={styles.smallTitle}>Playlists</Text>
-              <Playlists data={ctx.localDb.playlists} map={mapObjectId(ctx.localDb.metadata)}/>
+              <Playlists data={ctx.localDb.playlists}/>
               <Spacer/>
-              <Text style={styles.smallTitle}>Liked songs</Text>
-              <Spacer/>
+              { ctx.user?.ratings? <>
+                <Text style={styles.smallTitle}>Liked songs</Text>
+                <Songs data={filterByRating(ctx.user?.ratings, 1)}/>
+                <Spacer/>
+              </>: <></>}
               <Text style={styles.smallTitle}>Top Artists</Text>
               <Spacer/>
               <Text style={styles.smallTitle}>Top Albums</Text>
-              <Albums data={filterByMetadata(ctx.localDb.albums, ctx.localDb.metadata, 'album')} map={mapObjectId(ctx.localDb.artists)}/>
+              <Albums data={filterByMetadata(ctx.localDb.albums, ctx.localDb.metadata, 'album')}/>
           </> : (ctx?.token? <>
             <Text style={styles.smallTitle}>Loading...</Text>
           </> : <>

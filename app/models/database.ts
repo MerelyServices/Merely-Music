@@ -23,16 +23,22 @@ export function filterByMetadata<T extends BaseItem>(items:T[], meta:Metadata[],
   return result;
 }
 
-export interface Artist {
-  _id: ObjectId,
+export function filterByRating(ratings:UserRating[], value:-1|1): ObjectId[] {
+  return ratings.filter((rating) => rating.value == value).map((rating) => rating.song);
+}
+
+export function ResolveObjects<T extends BaseItem>(ids:ObjectId[], map:ObjectIdMap<T>): T[] {
+  return ids.map((id) => map[id.toString()]);
+}
+
+export interface Artist extends BaseItem {
   name: string,
   aka?: string[],
   bio?: string,
   artwork?: string,
 }
 
-export interface Album {
-  _id: ObjectId,
+export interface Album extends BaseItem {
   name: string,
   artist: ObjectId,
   // contributing artists: query
@@ -40,13 +46,11 @@ export interface Album {
   artwork?: string
 }
 
-export interface Genre {
-  _id: ObjectId,
+export interface Genre extends BaseItem {
   name: string
 }
 
-export interface Metadata {
-  _id: ObjectId,
+export interface Metadata extends BaseItem {
   title: string,
   artists: ObjectId[],
   position?: number,
@@ -61,20 +65,18 @@ interface UserPreferences {
 
 }
 
-type UserRatings = { song:ObjectId, value:-1|1 }[]
+type UserRating = { song:ObjectId, value:-1|1 }
 
-export interface User {
-  _id: ObjectId,
+export interface User extends BaseItem {
   id: string,
   username: string,
-  ratings: UserRatings,
+  ratings: UserRating[],
   preferences: UserPreferences
 }
 
 export type OtherUser = Pick<User, '_id'|'username'>
 
-export interface Playlist {
-  _id: ObjectId,
+export interface Playlist extends BaseItem {
   owner: ObjectId,
   collaborators?: ObjectId[],
   name: string,
@@ -82,8 +84,7 @@ export interface Playlist {
   songs: ObjectId[]
 }
 
-export interface Song {
-  _id: ObjectId,
+export interface Song extends BaseItem {
   owners: {owner:ObjectId, metadata: ObjectId}[],
   quality: {codec: 'mp3'|'aac'|'flac', bitrate:number},
   hash: string,
