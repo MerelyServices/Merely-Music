@@ -10,15 +10,6 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Theme } from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 
-const data = 'T,e,s,t,i,n,g'.split(',');
-function renderItem(item:string) {
-  return(
-    <View key={item}>
-      <Text>{item}</Text>
-    </View>
-  )
-}
-
 export default function Home() {
   const colorScheme = useColorScheme();
 
@@ -33,10 +24,8 @@ export default function Home() {
               <Playlists data={ctx.localDb.playlists} map={mapObjectId(ctx.localDb.metadata)}/>
               <Spacer/>
               <Text style={styles.smallTitle}>Liked songs</Text>
-              {data.map(renderItem)}
               <Spacer/>
               <Text style={styles.smallTitle}>Top Artists</Text>
-              {data.map(renderItem)}
               <Spacer/>
               <Text style={styles.smallTitle}>Top Albums</Text>
               <Albums data={filterByMetadata(ctx.localDb.albums, ctx.localDb.metadata, 'album')} map={mapObjectId(ctx.localDb.artists)}/>
