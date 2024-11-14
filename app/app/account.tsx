@@ -15,7 +15,7 @@ export default function AboutScreen() {
           { ctx => ctx?.user ? <>
             <Image style={styles.logo} source={require('../assets/images/user.png')} resizeMode='contain'/>
             <Text style={styles.title}>{ctx.user?.username || 'Unknown username'}</Text>
-            <Text style={styles.subtitle}>{(ctx.profile?.email || 'Unknown email')}</Text>
+            <Text style={styles.subtitle}>{(ctx.passportProfile?.email || 'Unknown email')}</Text>
             <Spacer/>
             <Text style={styles.note}>
               This is your Passport account. Sign in with this account on other devices to sync your music, playlists, and metadata.

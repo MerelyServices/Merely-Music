@@ -30,7 +30,6 @@ export function LoginHandler(props:LoginHandlerProps) {
         const token = queryParams['token'] || null;
         const profile = queryParams['profile'] || null;
         if(typeof token == 'string' && typeof profile == 'string') {
-          console.log(token, profile);
           if(authctx)
             authctx.signIn(token, profile);
           else
