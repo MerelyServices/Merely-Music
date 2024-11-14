@@ -30,7 +30,7 @@ export default function Home() {
         <DbContext.Consumer>
           { ctx => ctx?.localDb? <>
               <Text style={styles.smallTitle}>Playlists</Text>
-              <Playlists data={ctx.localDb.playlists} meta={mapObjectId(ctx.localDb.metadata)}/>
+              <Playlists data={ctx.localDb.playlists} map={mapObjectId(ctx.localDb.metadata)}/>
               <Spacer/>
               <Text style={styles.smallTitle}>Liked songs</Text>
               {data.map(renderItem)}
