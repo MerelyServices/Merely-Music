@@ -9,13 +9,14 @@ export const baseStyles = StyleSheet.create({
     marginRight: 15,
   },
   container: {
-    marginHorizontal: 30,
-    marginBottom: 30,
+    paddingHorizontal: 30,
+    paddingBottom: 30,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginVertical: 14,
+    marginTop: 14,
+    marginBottom: 8,
   },
   smallTitle: {
     fontSize: 22,
@@ -30,17 +31,17 @@ export const baseStyles = StyleSheet.create({
     marginTop: -10,
   },
   paragraph: {
-    marginTop: 14,
+    marginVertical: 8,
   },
   note: {
-    marginTop: 14,
+    marginVertical: 8,
     maxWidth: '80%',
     textAlign: 'center',
   },
   separator: {
     height: 1,
     width: '100%',
-    marginBottom: 14,
+    marginVertical: 8,
   },
   link: {
     padding: 14,
@@ -58,6 +59,7 @@ export const baseStyles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 32,
+    marginBottom: 16,
     borderRadius: 4,
     elevation: 3,
     backgroundColor: Colors.bg,
