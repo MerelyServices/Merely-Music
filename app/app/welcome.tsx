@@ -76,7 +76,7 @@ export default function WelcomeScreen() {
         :
           <View style={styles.buttonStack}>
             <LoginButton/>
-            <Link href="/(tabs)/home" style={styles.link} onPress={setWelcomeDone}>
+            <Link href="/(tabs)/home" style={{ ...styles.link, marginTop: -12 }} onPress={setWelcomeDone}>
               <Text style={styles.buttonText}>Use Merely Music with local storage</Text>
             </Link>
           </View>

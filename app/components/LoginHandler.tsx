@@ -59,7 +59,7 @@ export function LoginButton(props: Omit<React.ComponentProps<typeof Link>, 'href
         WebBrowser.openBrowserAsync(loginUrl);
       }
     }}>
-      <Text style={styles.linkText}>Sign in with Passport</Text>
+      <Text style={styles.buttonText}>Sign in with Passport</Text>
     </Link>
   )
 }
