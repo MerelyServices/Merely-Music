@@ -239,6 +239,7 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
         if(ev.data.startsWith('profile='))
           setPassportProfile(ev.data.slice(8)? JSON.parse(ev.data.slice(8)): null);
       }
+
       AsyncStorage.multiGet(['user', 'localDb']).then((results) => {
         // Default values
         setToken(markReady);

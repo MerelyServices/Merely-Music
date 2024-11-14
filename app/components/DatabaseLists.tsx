@@ -8,7 +8,7 @@ import { baseStyles } from '@/constants/Stylesheet';
 import { Text } from '@/components/Themed';
 import ObjectId from 'mongo-objectid';
 
-type PropsData<T, R> = Omit<React.ComponentProps<any>, 'data'> & { data: T[], map: ObjectIdMap<R>[] };
+type PropsData<T, R> = Omit<React.ComponentProps<any>, 'data'> & { data: T[], map: ObjectIdMap<R> };
 
 function PlaylistSongPreview(props: PropsData<ObjectId, Metadata>) {
   return <>
@@ -38,16 +38,14 @@ export function Playlists(props: PropsData<Playlist, Metadata>) {
   return <FlatList data={props.data} renderItem={renderItem} horizontal={true}/>;
 }
 
-export function Albums(
-  props: Omit<React.ComponentProps<any>, 'data'> & { data: Album[], artists: ObjectIdMap<Artist> }
-) {
+export function Albums(props: PropsData<Album, Artist>) {
   function renderItem(info:ListRenderItemInfo<Album>) {
     return (
       <View key={info.item._id.toString()} style={styles.listItem}>
         {/*<Link href={'/playlist/'+playlist._id.toString()}>*/}
           <Image style={styles.artworkImage} source={require('../assets/images/album.png')}/>
           <Text style={styles.listItemName}>{info.item.name}</Text>
-          <Text style={styles.subtitle}>{props.artists[info.item.artist.toString()].name}</Text>
+          <Text style={styles.subtitle}>{props.map[info.item.artist.toString()].name}</Text>
         {/*</Link>*/}
       </View>
     );

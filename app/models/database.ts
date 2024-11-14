@@ -8,12 +8,19 @@ export interface ObjectIdMap<T> {
   [id: string]: T
 }
 
-export function mapObjectId<T extends BaseItem>(arr:T[]): ObjectIdMap<T>[] {
-  return arr.map((val) => {
-    let out = {} as ObjectIdMap<T>;
+export function mapObjectId<T extends BaseItem>(arr:T[]): ObjectIdMap<T> {
+  let out = {} as ObjectIdMap<T>;
+  arr.forEach((val) => {
     out[val._id.toString()] = val;
-    return out;
   });
+  return out;
+}
+
+export function filterByMetadata<T extends BaseItem>(items:T[], meta:Metadata[], metaKey:keyof Metadata): T[] {
+  const metaAlbums = meta.reduce<ObjectId[]>((out, curr) => {out.push((curr[metaKey] as ObjectId)/*?.toString()*/); return out}, []);
+  const result =  items.filter((item) => metaAlbums.includes(item._id/*.toString()*/));
+  console.log("filterByMetadata", meta, metaAlbums, result);
+  return result;
 }
 
 export interface Artist {

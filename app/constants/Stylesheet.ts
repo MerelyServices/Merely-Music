@@ -10,6 +10,7 @@ export const baseStyles = StyleSheet.create({
   },
   container: {
     marginHorizontal: 30,
+    marginBottom: 30,
   },
   title: {
     fontSize: 28,

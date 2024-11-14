@@ -5,7 +5,7 @@ import { baseStyles } from '@/constants/Stylesheet';
 import { Albums, Playlists } from '@/components/DatabaseLists';
 import { StatusBar } from 'expo-status-bar';
 import { DbContext } from '@/context/database';
-import { mapObjectId } from '@/models/database';
+import { filterByMetadata, mapObjectId } from '@/models/database';
 import { FontAwesome } from '@expo/vector-icons';
 import { Theme } from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -39,7 +39,7 @@ export default function Home() {
               {data.map(renderItem)}
               <Spacer/>
               <Text style={styles.smallTitle}>Top Albums</Text>
-              <Albums data={[]} artists={{}}/>
+              <Albums data={filterByMetadata(ctx.localDb.albums, ctx.localDb.metadata, 'album')} map={mapObjectId(ctx.localDb.artists)}/>
           </> : (ctx?.token? <>
             <Text style={styles.smallTitle}>Loading...</Text>
           </> : <>
