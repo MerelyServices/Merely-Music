@@ -9,7 +9,7 @@ import { ExternalLink } from '@/components/ExternalLink';
 import { baseStyles } from '@/constants/Stylesheet';
 import Colors from '@/constants/Colors';
 import { DbContext } from '@/context/database';
-import { loginUrl } from '@/components/LoginHandler';
+import { LoginButton, loginUrl } from '@/components/LoginHandler';
 
 interface Slide {
   key: number,
@@ -67,7 +67,7 @@ export default function WelcomeScreen() {
         { ctx => ctx?.token ? 
           <View style={styles.buttonStack}>
             <ExternalLink href="https://passport.yiays.com/profile/" style={styles.button}>
-              <Text style={styles.buttonText}>Signed in as {ctx.profile?.username || 'Unknown'}</Text>
+              <Text style={styles.buttonText}>Signed in as {ctx.passportProfile?.username || 'Unknown'}</Text>
             </ExternalLink>
             <TouchableOpacity onPress={ctx.signOut} style={styles.link}>
               <Text style={styles.buttonText}>Sign out</Text>
@@ -75,9 +75,7 @@ export default function WelcomeScreen() {
           </View>
         :
           <View style={styles.buttonStack}>
-            <ExternalLink href={loginUrl} style={styles.button}>
-              <Text style={styles.buttonText}>Sign in with Passport</Text>
-            </ExternalLink>
+            <LoginButton/>
             <Link href="/(tabs)/home" style={styles.link} onPress={setWelcomeDone}>
               <Text style={styles.buttonText}>Use Merely Music with local storage</Text>
             </Link>

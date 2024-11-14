@@ -5,7 +5,7 @@ import { Spacer, Text, View } from '@/components/Themed';
 import { ExternalLink } from '@/components/ExternalLink';
 import { baseStyles } from '@/constants/Stylesheet';
 import { DbContext } from '@/context/database';
-import { loginUrl } from '@/components/LoginHandler';
+import { LoginButton } from '@/components/LoginHandler';
 
 export default function AboutScreen() {
   return (
@@ -35,9 +35,7 @@ export default function AboutScreen() {
               Sign in with Passport to sync your music, playlists, and metadata to other devices.
             </Text>
             <Spacer/>
-            <ExternalLink href={loginUrl} style={styles.button}>
-              <Text style={styles.linkText}>Sign in with Passport</Text>
-            </ExternalLink>
+            <LoginButton/>
           </>}
         </DbContext.Consumer>
         {/* Use a light status bar on iOS to account for the black space above the modal */}
