@@ -34,7 +34,7 @@ export class PassportLink {
 
 	public async getProfile(token: string, db:Db): Promise<false | PassportProfile> {
 		// Ensures client is logged in and returns the profile
-		if(token in this.sessions) {
+		if(token in this.sessions && token in this.sessionUsers) {
 			// Use cached token if it meets the security requirements
 			if(this.sessions[token].current && this.sessions[token].trusted)
 				return this.sessions[token];
