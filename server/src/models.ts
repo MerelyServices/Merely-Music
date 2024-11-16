@@ -23,21 +23,6 @@ export interface Genre extends BaseItem {
   name: string
 }
 
-export interface Metadata extends BaseItem {
-  title: string,
-  artists: ObjectId[],
-  position?: number,
-  album: ObjectId,
-  added: Date,
-  published: Date,
-  genres: ObjectId[],
-  explicit: boolean
-}
-
-export interface SongMetadata extends Song {
-  metadata: Metadata
-}
-
 interface UserPreferences {
 
 }
@@ -61,6 +46,17 @@ export interface Playlist extends BaseItem {
   songs: ObjectId[]
 }
 
+export interface Metadata extends BaseItem {
+  title: string,
+  artists: ObjectId[],
+  position?: number,
+  album: ObjectId,
+  added: Date,
+  published: Date,
+  genres: ObjectId[],
+  explicit: boolean
+}
+
 export interface Song extends BaseItem {
   owners: {owner:ObjectId, metadata: ObjectId}[],
   quality: {codec: 'mp3'|'aac'|'flac', bitrate:number},
@@ -68,6 +64,10 @@ export interface Song extends BaseItem {
   hash: string,
   acoustid?: string,
   artwork?: string
+}
+
+export interface SongMetadata extends Omit<Song, 'owners'> {
+  metadata: Metadata
 }
 
 export interface UserDatabase {

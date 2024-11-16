@@ -49,20 +49,35 @@ export default function (passport: PassportLink): express.Router {
     return await Conn.db.collection('metadata').find(search).toArray() as Metadata[];
   }
 
-  async function getSongsWithMetadata(ids:ObjectId[]): Promise<SongMetadata[]> {
-    //TODO: join song and metadata with a query
-    const search = {
-      _id: {$in: ids}
-    };
-    return await Conn.db.collection('metadata').find(search).toArray() as SongMetadata[];
-  }
-
   routes.get("/metadata/:id", async (req, res) => {
     const result = await getMetadata(new ObjectId(req.params.id));
     if (result[0])
       res.status(200).send(result[0] as Metadata);
     else
       res.status(404).end();
+  });
+
+  async function getSongsWithMetadata(userId:ObjectId): Promise<SongMetadata[]> {
+    //TODO: figure out why this isn't working
+    const pipeline = [
+      {$match: {'owners.owner': userId}},
+      {$lookup: {
+        from: 'metadata',
+        localField: 'owners.metadata',
+        foreignField: '_id',
+        as: 'metadata'
+      }},
+      {$unwind: '$metadata'},
+      {$project: {
+        owners: 0
+      }}
+    ];
+    return await Conn.db.collection('metadata').aggregate(pipeline).toArray() as SongMetadata[];
+  }
+
+  routes.get("/songmetadata", async (req, res) => {
+    const result = await getSongsWithMetadata(passport.sessionUsers[req.token]._id);
+    res.status(200).send(result);
   });
 
   async function getAlbums(): Promise<Album[]> {
@@ -171,23 +186,13 @@ export default function (passport: PassportLink): express.Router {
 
   routes.post("/sync", async (req, res) => {
     // TODO: readonly for now
-    const songs = await getSongs(req.token);
     const userId = passport.sessionUsers[req.token]._id;
-    const ownedSongMetadataIds = songs.reduce<ObjectId[]>((out, song) => {
-      const songMetadata = song.owners.reduce<ObjectId|null>((out, data) => {
-        if(userId.toString() == data.owner.toString())
-          out = data.metadata;
-        return out;
-      }, null);
-      if(songMetadata)
-        out.push(songMetadata);
-      return out;
-    }, []) || [];
+
     const result: Omit<UserDatabase, 'lastSync'> = {
       artists: await getArtists(),
       albums: await getAlbums(),
       genres: await getGenres(),
-      songs: await getSongsWithMetadata(ownedSongMetadataIds),
+      songs: await getSongsWithMetadata(userId),
       users: await getUsers(userId),
       playlists: await getPlaylists(req.token),
     }
