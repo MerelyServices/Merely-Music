@@ -28,6 +28,8 @@ if(process.env.CORS)
   app.use(cors());
 // Authentication
 app.use(asyncMiddleware(async (req, res, next) => {
+  if(!Conn.db)
+    return res.status(503).json({message: "Database is down. Please try again later."});
   const token = req.headers.authorization?.split(' ')[1]; // Bearer <token>
   if(!token) {
     console.log("Denied access because token wasn't provided.")
