@@ -16,10 +16,13 @@ export function mapObjectId<T extends BaseItem>(arr:T[]): ObjectIdMap<T> {
   return out;
 }
 
-export function filterByMetadata<T extends BaseItem>(items:T[], meta:Metadata[], metaKey:keyof Metadata): T[] {
-  const metaAlbums = meta.reduce<ObjectId[]>((out, curr) => {out.push((curr[metaKey] as ObjectId)/*?.toString()*/); return out}, []);
-  const result =  items.filter((item) => metaAlbums.includes(item._id/*.toString()*/));
-  console.log("filterByMetadata", meta, metaAlbums, result);
+export function filterByMetadata<T extends BaseItem>(items:T[], meta:SongMetadata[], metaKey:keyof Metadata): T[] {
+  const itemRefs = meta.reduce<string[]>((out, curr) => {
+    out.push((curr.metadata[metaKey] as ObjectId).toString());
+    return out;
+  }, []);
+  const result =  items.filter((item) => itemRefs.includes(item._id.toString()));
+  console.log("filterByMetadata", meta, itemRefs, result);
   return result;
 }
 
@@ -61,6 +64,10 @@ export interface Metadata extends BaseItem {
   explicit: boolean
 }
 
+export interface SongMetadata extends Song {
+  metadata: Metadata
+}
+
 interface UserPreferences {
 
 }
@@ -87,6 +94,7 @@ export interface Playlist extends BaseItem {
 export interface Song extends BaseItem {
   owners: {owner:ObjectId, metadata: ObjectId}[],
   quality: {codec: 'mp3'|'aac'|'flac', bitrate:number},
+  duration: number,
   hash: string,
   acoustid?: string,
   artwork?: string
@@ -96,7 +104,7 @@ export interface UserDatabase {
   artists: Artist[],
   albums: Album[],
   genres: Genre[],
-  metadata: Metadata[],
+  songs: SongMetadata[],
   users: OtherUser[],
   playlists: Playlist[],
   lastSync: number,

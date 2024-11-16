@@ -2,7 +2,7 @@ import * as express from 'express';
 import { FindOptions, ObjectId } from 'mongodb';
 import { Conn } from './mongo.helper';
 import { PassportLink, PassportProfile } from './passport';
-import { Album, Artist, UserDatabase, Genre, Metadata, OtherUser, Playlist, Song, User } from './models';
+import { Album, Artist, UserDatabase, Genre, Metadata, OtherUser, Playlist, Song, User, SongMetadata } from './models';
 
 const routes = express.Router();
 routes.use(express.json());
@@ -49,11 +49,12 @@ export default function (passport: PassportLink): express.Router {
     return await Conn.db.collection('metadata').find(search).toArray() as Metadata[];
   }
 
-  async function getSongsMetadata(ids:ObjectId[]): Promise<Metadata[]> {
+  async function getSongsWithMetadata(ids:ObjectId[]): Promise<SongMetadata[]> {
+    //TODO: join song and metadata with a query
     const search = {
       _id: {$in: ids}
     };
-    return await Conn.db.collection('metadata').find(search).toArray() as Metadata[];
+    return await Conn.db.collection('metadata').find(search).toArray() as SongMetadata[];
   }
 
   routes.get("/metadata/:id", async (req, res) => {
@@ -186,7 +187,7 @@ export default function (passport: PassportLink): express.Router {
       artists: await getArtists(),
       albums: await getAlbums(),
       genres: await getGenres(),
-      metadata: await getSongsMetadata(ownedSongMetadataIds),
+      songs: await getSongsWithMetadata(ownedSongMetadataIds),
       users: await getUsers(userId),
       playlists: await getPlaylists(req.token),
     }

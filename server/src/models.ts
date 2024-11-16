@@ -1,15 +1,17 @@
 import { ObjectId } from "mongodb";
 
-export interface Artist {
-  _id: ObjectId,
+export interface BaseItem {
+  _id: ObjectId
+}
+
+export interface Artist extends BaseItem {
   name: string,
   aka?: string[],
   bio?: string,
   artwork?: string,
 }
 
-export interface Album {
-  _id: ObjectId,
+export interface Album extends BaseItem {
   name: string,
   artist: ObjectId,
   // contributing artists: query
@@ -17,13 +19,11 @@ export interface Album {
   artwork?: string
 }
 
-export interface Genre {
-  _id: ObjectId,
+export interface Genre extends BaseItem {
   name: string
 }
 
-export interface Metadata {
-  _id: ObjectId,
+export interface Metadata extends BaseItem {
   title: string,
   artists: ObjectId[],
   position?: number,
@@ -34,24 +34,26 @@ export interface Metadata {
   explicit: boolean
 }
 
-export interface UserPreferences {
+export interface SongMetadata extends Song {
+  metadata: Metadata
+}
+
+interface UserPreferences {
 
 }
 
-export type UserRatings = {song:ObjectId, value:-1|1}[]
+type UserRating = { song:ObjectId, value:-1|1 }
 
-export interface User {
-  _id: ObjectId,
+export interface User extends BaseItem {
   id: string,
   username: string,
-  ratings: UserRatings,
+  ratings: UserRating[],
   preferences: UserPreferences
 }
 
-export type OtherUser = Pick<User, '_id'|'username'>;
+export type OtherUser = Pick<User, '_id'|'username'>
 
-export interface Playlist {
-  _id: ObjectId,
+export interface Playlist extends BaseItem {
   owner: ObjectId,
   collaborators?: ObjectId[],
   name: string,
@@ -59,10 +61,10 @@ export interface Playlist {
   songs: ObjectId[]
 }
 
-export interface Song {
-  _id: ObjectId,
+export interface Song extends BaseItem {
   owners: {owner:ObjectId, metadata: ObjectId}[],
   quality: {codec: 'mp3'|'aac'|'flac', bitrate:number},
+  duration: number,
   hash: string,
   acoustid?: string,
   artwork?: string
@@ -72,7 +74,7 @@ export interface UserDatabase {
   artists: Artist[],
   albums: Album[],
   genres: Genre[],
-  metadata: Metadata[],
+  songs: SongMetadata[],
   users: OtherUser[],
   playlists: Playlist[],
   lastSync: number,
