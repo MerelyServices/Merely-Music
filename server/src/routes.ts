@@ -58,7 +58,6 @@ export default function (passport: PassportLink): express.Router {
   });
 
   async function getSongsWithMetadata(userId:ObjectId): Promise<SongMetadata[]> {
-    //TODO: figure out why this isn't working
     const pipeline = [
       {$match: {'owners.owner': userId}},
       {$lookup: {
@@ -72,7 +71,7 @@ export default function (passport: PassportLink): express.Router {
         owners: 0
       }}
     ];
-    return await Conn.db.collection('metadata').aggregate(pipeline).toArray() as SongMetadata[];
+    return await Conn.db.collection('song').aggregate(pipeline).toArray() as SongMetadata[];
   }
 
   routes.get("/songmetadata", async (req, res) => {
