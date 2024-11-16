@@ -2,7 +2,7 @@ import { ScrollView } from 'react-native';
 
 import { Spacer, Text, View } from '@/components/Themed';
 import { baseStyles } from '@/constants/Stylesheet';
-import { Albums, Playlists, Songs } from '@/components/DatabaseLists';
+import { Albums, Artists, Playlists, Songs } from '@/components/DatabaseLists';
 import { StatusBar } from 'expo-status-bar';
 import { DbContext } from '@/context/database';
 import { filterByMetadata, filterByRating, Metadata, ResolveObjects } from '@/models/database';
@@ -25,10 +25,11 @@ export default function Home() {
               <Spacer/>
               { ctx.user?.ratings? <>
                 <Text style={styles.smallTitle}>Liked songs</Text>
-                <Songs data={filterByRating(ctx.user?.ratings, 1)}/>
+                <Songs data={filterByRating(ctx.user.ratings, 1)}/>
                 <Spacer/>
               </>: <></>}
               <Text style={styles.smallTitle}>Top Artists</Text>
+              <Artists data={filterByMetadata(ctx.localDb.artists, ctx.localDb.songs, 'artists')}/>
               <Spacer/>
               <Text style={styles.smallTitle}>Top Albums</Text>
               <Albums data={filterByMetadata(ctx.localDb.albums, ctx.localDb.songs, 'album')}/>

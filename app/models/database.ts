@@ -18,7 +18,9 @@ export function mapObjectId<T extends BaseItem>(arr:T[]): ObjectIdMap<T> {
 
 export function filterByMetadata<T extends BaseItem>(items:T[], meta:SongMetadata[], metaKey:keyof Metadata): T[] {
   const itemRefs = meta.reduce<string[]>((out, curr) => {
-    out.push((curr.metadata[metaKey] as ObjectId).toString());
+    const reference = curr.metadata[metaKey] as ObjectId|ObjectId[];
+    const references = reference instanceof Array? reference: [reference];
+    out.push(...references.map(refId => refId.toString()));
     return out;
   }, []);
   const result =  items.filter((item) => itemRefs.includes(item._id.toString()));
