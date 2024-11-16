@@ -31,12 +31,16 @@ export default function Home() {
               <Text style={styles.smallTitle}>Top Artists</Text>
               <Spacer/>
               <Text style={styles.smallTitle}>Top Albums</Text>
-              <Albums data={filterByMetadata(ctx.localDb.albums, ctx.localDb.metadata, 'album')}/>
+              <Albums data={filterByMetadata(ctx.localDb.albums, ctx.localDb.songs, 'album')}/>
           </> : (ctx?.token? <>
             <Text style={styles.smallTitle}>Loading...</Text>
           </> : <>
             <Text style={styles.smallTitle}>Not signed in</Text>
-            <Text style={styles.paragraph}>Add your account using the <FontAwesome name="user-circle" color={Theme[colorScheme ?? 'light'].text}/> screen and start syncing your library everywhere.</Text>
+            <Text style={styles.paragraph}>
+              Add your account using the
+              <FontAwesome name="user-circle" color={Theme[colorScheme ?? 'light'].text}/> screen
+              and start syncing your library everywhere.
+            </Text>
           </> )}
         </DbContext.Consumer>
       </View>
