@@ -60,7 +60,7 @@ async function main() {
   const userId = new ObjectId();
   const user = {
     _id: userId,
-    id: 'example',
+    id: 'testing',
     username: 'Example',
     ratings: [],
     preferences: {}
@@ -84,6 +84,7 @@ async function main() {
     _id: songId,
     owners: [{owner: userId, metadata: metadataId}],
     quality: {codec: 'mp3', bitrate: 196},
+    duration: 90,
     hash: 'example'
   } as Song;
   await db.collection('song').insertOne(song);
