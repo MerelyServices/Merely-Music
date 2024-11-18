@@ -23,9 +23,7 @@ export interface Genre extends BaseItem {
   name: string
 }
 
-interface UserPreferences {
-
-}
+interface UserPreferences {}
 
 type UserRating = { song:ObjectId, value:-1|1 }
 

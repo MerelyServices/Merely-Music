@@ -1,19 +1,19 @@
 import dotenv from 'dotenv';
-import { MongoHelper } from '../src/mongo.helper';
-import { Album, Artist, Genre, Metadata, Playlist, Song, User, UserRatings } from '../src/models';
-import { ObjectId, Timestamp } from 'mongodb';
+import { Document } from 'mongodb';
+import { Conn } from '../src/mongo.helper';
+import { Album, Artist, Genre, Metadata, Playlist, Song, User } from '../src/models';
+import { ObjectId } from 'mongodb';
 
 dotenv.config();
 
 async function main() {
-  await MongoHelper.connect(process.env.DBURL as string);
-  const client = MongoHelper.client;
+  await Conn.connect(process.env.DBURL as string);
 
   // Verify connection
-  await client.db("admin").command({ ping: 1 });
+  await Conn.client.db("admin").command({ ping: 1 });
   console.log("Connected successfully to MongoDB");
 
-  const db = client.db("music");
+  const db = Conn.client.db("music");
 
   await db.collection('artist').deleteMany({});
   const artistId = new ObjectId();
@@ -87,6 +87,16 @@ async function main() {
     hash: 'example'
   } as Song;
   await db.collection('song').insertOne(song);
+
+  const liked = {
+    $push: {
+      ratings: {
+        song: songId,
+        value: 1
+      }
+    }
+  } as Document // Pick<User, 'ratings'>
+  await db.collection('user').updateOne({_id: userId}, liked);
 
   console.log("Finished resetting database.")
 }
