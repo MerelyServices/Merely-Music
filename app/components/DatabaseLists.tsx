@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import { ObjectIdMap, Album, Playlist, Artist, Metadata, Song, ResolveObjects, mapObjectId, SongMetadata } from '@/models/database';
+import { ObjectIdMap, Album, Playlist, Artist, mapObjectId, SongMetadata } from '@/models/database';
 import { View, Image, StyleSheet, FlatList, ListRenderItemInfo } from 'react-native';
 import { Link } from 'expo-router';
 
@@ -10,6 +10,10 @@ import ObjectId from 'mongo-objectid';
 import { DbContext } from '@/context/database';
 
 type PropsData<T> = Omit<React.ComponentProps<any>, 'data'> & { data: T[] };
+
+function secondsToTime(seconds:number):string {
+  return Math.floor(seconds/60) + ':' + Math.round(seconds%60);
+}
 
 function PlaylistSongPreview(props: PropsData<ObjectId> & {songMeta: ObjectIdMap<SongMetadata>}) {
   return <>
@@ -76,10 +80,10 @@ export function Songs(props: PropsData<ObjectId>) {
     return (
       <View key={song._id.toString()} style={styles.wideItem}>
         <Image style={styles.wideItemArtwork} source={require('../assets/images/song.png')}/>
-        <Text style={styles.wideCol1}>{song.metadata.title}</Text>
-        <Text style={styles.wideCol2}>{artistNames}</Text>
-        <Text style={styles.wideCol3}>{albums[song.metadata.album.toString()].name}</Text>
-        <Text style={styles.wideCol4}>{song.duration}</Text>
+        <Text style={{ ...styles.wideCol, ...styles.wideCol1 }}>{song.metadata.title}</Text>
+        <Text style={{ ...styles.wideCol, ...styles.wideCol2 }}>{artistNames}</Text>
+        <Text style={{ ...styles.wideCol, ...styles.wideCol3 }}>{albums[song.metadata.album.toString()].name}</Text>
+        <Text style={{ ...styles.wideCol, ...styles.wideCol4 }}>{secondsToTime(song.duration)}</Text>
       </View>
     )
   }
@@ -132,25 +136,33 @@ const styles = StyleSheet.create({
   },
   wideItemArtwork: {
     position: 'absolute',
+    width: 40,
+    height: 40,
+  },
+  wideCol: {
+    position: 'absolute',
     top: 4,
-    left: 4,
-    width: 24,
-    height: 24,
+    height: 32,
+    textAlign: 'center',
+    verticalAlign: 'middle',
+    overflow: 'hidden',
   },
   wideCol1: {
-    left: 36,
-    right: '30%',
+    left: 52,
+    right: '60%',
+    textAlign: 'left',
   },
   wideCol2: {
-    left: '30%',
-    right: '40%',
+    left: '40%',
+    right: '35%',
   },
   wideCol3: {
-    left: '60%',
-    right: '20%',
+    left: '65%',
+    right: '10%',
   },
   wideCol4: {
-    left: '80%',
+    left: '90%',
     right: 4,
+    textAlign: 'right',
   },
 });
