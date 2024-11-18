@@ -1,39 +1,14 @@
 import ObjectId from "mongo-objectid";
 
+
+// Models
+
 export interface BaseItem {
   _id: ObjectId
 }
 
 export interface ObjectIdMap<T> {
   [id: string]: T
-}
-
-export function mapObjectId<T extends BaseItem>(arr:T[]): ObjectIdMap<T> {
-  let out = {} as ObjectIdMap<T>;
-  arr.forEach((val) => {
-    out[val._id.toString()] = val;
-  });
-  return out;
-}
-
-export function filterByMetadata<T extends BaseItem>(items:T[], meta:SongMetadata[], metaKey:keyof Metadata): T[] {
-  const itemRefs = meta.reduce<string[]>((out, curr) => {
-    const reference = curr.metadata[metaKey] as ObjectId|ObjectId[];
-    const references = reference instanceof Array? reference: [reference];
-    out.push(...references.map(refId => refId.toString()));
-    return out;
-  }, []);
-  const result =  items.filter((item) => itemRefs.includes(item._id.toString()));
-  console.log("filterByMetadata", meta, itemRefs, result);
-  return result;
-}
-
-export function filterByRating(ratings:UserRating[], value:-1|1): ObjectId[] {
-  return ratings.filter((rating) => rating.value == value).map((rating) => rating.song);
-}
-
-export function ResolveObjects<T extends BaseItem>(ids:ObjectId[], map:ObjectIdMap<T>): T[] {
-  return ids.map((id) => map[id.toString()]);
 }
 
 export interface Artist extends BaseItem {
@@ -110,4 +85,34 @@ export interface UserDatabase {
   users: OtherUser[],
   playlists: Playlist[],
   lastSync: number,
+}
+
+// Utilities
+
+export function mapObjectId<T extends BaseItem>(arr:T[]): ObjectIdMap<T> {
+  let out = {} as ObjectIdMap<T>;
+  arr.forEach((val) => {
+    out[val._id.toString()] = val;
+  });
+  return out;
+}
+
+export function filterByMetadata<T extends BaseItem>(items:T[], meta:SongMetadata[], metaKey:keyof Metadata): T[] {
+  const itemRefs = meta.reduce<string[]>((out, curr) => {
+    const reference = curr.metadata[metaKey] as ObjectId|ObjectId[];
+    const references = reference instanceof Array? reference: [reference];
+    out.push(...references.map(refId => refId.toString()));
+    return out;
+  }, []);
+  const result =  items.filter((item) => itemRefs.includes(item._id.toString()));
+  console.log("filterByMetadata", meta, itemRefs, result);
+  return result;
+}
+
+export function filterByRating(ratings:UserRating[], value:-1|1): ObjectId[] {
+  return ratings.filter((rating) => rating.value == value).map((rating) => rating.song);
+}
+
+export function ResolveObjects<T extends BaseItem>(ids:ObjectId[], map:ObjectIdMap<T>): T[] {
+  return ids.map((id) => map[id.toString()]);
 }

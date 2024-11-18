@@ -37,6 +37,7 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
   const [remoteDb, setRemoteDb] = useState<Omit<UserDatabase, 'lastSync'>|null>(null);
   const [offline, setOffline] = useState<boolean>(false);
 
+  const STORAGE_VERSION = 1;
   const localStorageDefaults = { token:null, passportProfile:null, user:null, localDb:null };
   const syncThreshold = 1000 * 60 * 10; // 10 minutes
 
@@ -110,6 +111,9 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
   }
 
   async function getUser() {
+    if(!token) {
+      return;
+    }
     console.log("Fetching user data...");
     if(user) {
       console.log("Skipping as it's already stored.");
@@ -153,17 +157,16 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
       typeof token == 'undefined' || typeof passportProfile == 'undefined' ||
       typeof user == 'undefined' || typeof localDb == 'undefined'
     ) {
-      console.log("Waiting for AsyncStorage before syncing...");
-      return; // AsyncStorage is still working...
+      console.log("State is still loading...");
+      return;
     }
 
-    if(!token || !passportProfile)
-      return; // User is not signed in
-    
-    AxiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    if(token && passportProfile) {
+      AxiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-    if(!user) {
-      getUser();
+      if(!user) {
+        getUser();
+      }
     }
 
     // Use a debouncer to reduce calls when lots of changes happen at the same time
@@ -175,17 +178,14 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
           { token:token, passportProfile: passportProfile? JSON.stringify(passportProfile): null }
         ),
         user: passportProfile? JSON.stringify(user): null,
-        localDb: passportProfile? JSON.stringify(localDb): null
+        localDb: passportProfile? JSON.stringify(localDb): null,
+        STORAGE_VERSION: STORAGE_VERSION
       };
-      console.log(1, snapshot);
       const entries = Object.entries(snapshot).filter((v) => v[1] != null) as [string, string][];
-      console.log(2, entries);
       if(entries.length)
         AsyncStorage.multiSet(entries);
       const stored =  Object.fromEntries(entries);
-      console.log(3, stored);
       const missing = Object.keys(localStorageDefaults).filter((k) => !(k in stored));
-      console.log(4, missing);
       if(missing.length)
         AsyncStorage.multiRemove(missing);
       console.log("Saved state to device storage");
@@ -239,36 +239,50 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
           setPassportProfile(ev.data.slice(8)? JSON.parse(ev.data.slice(8)): null);
       }
 
-      AsyncStorage.multiGet(['user', 'localDb']).then((results) => {
+      AsyncStorage.multiGet(['user', 'localDb', 'STORAGE_VERSION']).then((results) => {
         // Default values
         setToken(markReady);
         setPassportProfile(markReady);
         setUser(markReady);
         setLocalDb(markReady);
+        let storageVersion;
         results.forEach((result) => {
           if(result[0] == 'user' && result[1])
             setUser(JSON.parse(result[1]));
-          if(result[0] == 'localDb' && result[1])
+          else if(result[0] == 'localDb' && result[1])
             setLocalDb(JSON.parse(result[1]));
+          else if(result[0] == 'STORAGE_VERSION')
+            storageVersion = result[1];
         });
+        if(storageVersion != STORAGE_VERSION){
+          console.error("Incompatible storage version, logging out...");
+          signOut();
+        }
       });
     } else {
-      AsyncStorage.multiGet(['token', 'profile', 'user', 'localDb']).then((results) => {
+      AsyncStorage.multiGet(['token', 'profile', 'user', 'localDb', 'STORAGE_VERSION']).then((results) => {
         // Default values
         setToken(markReady);
         setPassportProfile(markReady);
         setUser(markReady);
         setLocalDb(markReady);
-        results.forEach((result) => {
-          if(result[0] == 'token' && result[1])
-            setToken(result[1]);
-          else if(result[0] == 'profile' && result[1])
-            setPassportProfile(JSON.parse(result[1]));
-          else if(result[0] == 'user' && result[1])
-            setUser(JSON.parse(result[1]));
-          else if(result[0] == 'localDb' && result[1])
-            setLocalDb(JSON.parse(result[1]));
-        });
+        let storageVersion;
+          results.forEach((result) => {
+            if(result[0] == 'token' && result[1])
+              setToken(result[1]);
+            else if(result[0] == 'profile' && result[1])
+              setPassportProfile(JSON.parse(result[1]));
+            else if(result[0] == 'user' && result[1])
+              setUser(JSON.parse(result[1]));
+            else if(result[0] == 'localDb' && result[1])
+              setLocalDb(JSON.parse(result[1]));
+            else if(result[0] == 'STORAGE_VERSION')
+              storageVersion = result[1];
+          });
+        if(storageVersion != STORAGE_VERSION){
+          console.error(`Incompatible storage version ${storageVersion} (This client needs ${STORAGE_VERSION}), logging out...`);
+          signOut();
+        }
       });
     }
   }, []);
