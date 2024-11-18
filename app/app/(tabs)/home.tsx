@@ -19,13 +19,13 @@ export default function Home() {
         <Text style={styles.title}>Library</Text>
         <Spacer/>
         <DbContext.Consumer>
-          { ctx => ctx?.localDb? <>
+          { ctx => ctx?.localDb ? <>
               <Text style={styles.smallTitle}>Playlists</Text>
               <Playlists data={ctx.localDb.playlists}/>
               <Spacer/>
-              { ctx.user?.ratings? <>
+              { ctx.localDb.user?.ratings?.length ? <>
                 <Text style={styles.smallTitle}>Liked songs</Text>
-                <Songs data={filterByRating(ctx.user.ratings, 1)}/>
+                <Songs data={filterByRating(ctx.localDb.user.ratings, 1)}/>
                 <Spacer/>
               </>: <></>}
               <Text style={styles.smallTitle}>Top Artists</Text>
@@ -33,7 +33,7 @@ export default function Home() {
               <Spacer/>
               <Text style={styles.smallTitle}>Top Albums</Text>
               <Albums data={filterByMetadata(ctx.localDb.albums, ctx.localDb.songs, 'album')}/>
-          </> : (ctx?.token? <>
+          </> : (ctx?.token && ctx.passportProfile ? <>
             <Text style={styles.smallTitle}>Loading...</Text>
           </> : <>
             <Text style={styles.smallTitle}>Not signed in</Text>

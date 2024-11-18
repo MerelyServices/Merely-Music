@@ -30,9 +30,7 @@ export interface Genre extends BaseItem {
   name: string
 }
 
-interface UserPreferences {
-
-}
+interface UserPreferences {}
 
 type UserRating = { song:ObjectId, value:-1|1 }
 
@@ -78,6 +76,7 @@ export interface SongMetadata extends Omit<Song, 'owners'> {
 }
 
 export interface UserDatabase {
+  user: User,
   artists: Artist[],
   albums: Album[],
   genres: Genre[],
@@ -105,7 +104,6 @@ export function filterByMetadata<T extends BaseItem>(items:T[], meta:SongMetadat
     return out;
   }, []);
   const result =  items.filter((item) => itemRefs.includes(item._id.toString()));
-  console.log("filterByMetadata", meta, itemRefs, result);
   return result;
 }
 

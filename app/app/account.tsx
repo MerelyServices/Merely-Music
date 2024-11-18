@@ -12,9 +12,9 @@ export default function AboutScreen() {
     <ScrollView style={{ flexGrow:0 }}>
       <View style={styles.container}>
         <DbContext.Consumer>
-          { ctx => ctx?.user ? <>
+          { ctx => ctx?.localDb?.user ? <>
             <Image style={styles.logo} source={require('../assets/images/user.png')} resizeMode='contain'/>
-            <Text style={styles.title}>{ctx.user?.username || 'Unknown username'}</Text>
+            <Text style={styles.title}>{ctx.localDb.user?.username || 'Unknown username'}</Text>
             <Text style={styles.subtitle}>{(ctx.passportProfile?.email || 'Unknown email')}</Text>
             <Spacer/>
             <Text style={styles.note}>

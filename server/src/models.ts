@@ -69,6 +69,7 @@ export interface SongMetadata extends Omit<Song, 'owners'> {
 }
 
 export interface UserDatabase {
+  user: User,
   artists: Artist[],
   albums: Album[],
   genres: Genre[],

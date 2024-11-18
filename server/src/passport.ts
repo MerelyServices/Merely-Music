@@ -58,7 +58,7 @@ export class PassportLink {
 			if(result.ok) {
 				const profile = await result.json() as PassportProfile;
 				this.sessions[token] = profile;
-				this.sessionUsers[token] = await this.getUser(token, profile, db);
+				this.sessionUsers[token] = (await this.getUser(token, profile, db))._id;
 				return profile;
 			}
 		}
@@ -94,5 +94,5 @@ interface AuthSessions{
 }
 
 interface SessionUsers{
-	[key: string]: User
+	[key: string]: ObjectId
 }

@@ -11,7 +11,6 @@ import { PassportProfile } from '@/models/passport';
 export interface DbContextParams {
   token: string|null|undefined,
   passportProfile: PassportProfile|null|undefined,
-  user: User|null|undefined,
   localDb: UserDatabase|null|undefined,
   offline: boolean,
   signIn: (token: string, profile: string) => void,
@@ -32,13 +31,12 @@ function markReady<T>(prev:T): T|null {
 const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
   const [token, setToken] = useState<string|null|undefined>();
   const [passportProfile, setPassportProfile] = useState<PassportProfile|null|undefined>();
-  const [user, setUser] = useState<User|null|undefined>();
   const [localDb, setLocalDb] = useState<UserDatabase|null|undefined>();
   const [remoteDb, setRemoteDb] = useState<Omit<UserDatabase, 'lastSync'>|null>(null);
   const [offline, setOffline] = useState<boolean>(false);
 
-  const STORAGE_VERSION = 1;
-  const localStorageDefaults = { token:null, passportProfile:null, user:null, localDb:null };
+  const STORAGE_VERSION = '1';
+  const localStorageDefaults = { token:null, passportProfile:null, localDb:null };
   const syncThreshold = 1000 * 60 * 10; // 10 minutes
 
   async function apiCall<T>(path='/', data={}, method:'get'|'post'='get'): Promise<T|number> {
@@ -86,7 +84,6 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
     setPassportProfile(JSON.parse(profile));
 
     // Set other values as null to confirm they are ready to be fetched
-    setUser(null);
     setLocalDb(null);
   }
 
@@ -94,7 +91,6 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
     console.log("Signing out...");
     setToken(null);
     setPassportProfile(null);
-    setUser(null);
     setLocalDb(null);
     
     AxiosInstance.defaults.headers.common['Authorization'] = undefined;
@@ -107,25 +103,6 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
       const passportBroadcast = new BroadcastChannel('passport_auth_event');
       passportBroadcast.postMessage('token=');
       passportBroadcast.postMessage('profile=');
-    }
-  }
-
-  async function getUser() {
-    if(!token) {
-      return;
-    }
-    console.log("Fetching user data...");
-    if(user) {
-      console.log("Skipping as it's already stored.");
-      return;
-    }
-    const result = await apiCall<User>('/user/');
-    if(typeof result == 'number') {
-      console.error("Fetching user failed", result);
-      setTimeout(getUser, 5000);
-    } else {
-      console.log("Found user", result.id);
-      setUser(result);
     }
   }
 
@@ -154,8 +131,7 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
   
   useEffect(() => {
     if(
-      typeof token == 'undefined' || typeof passportProfile == 'undefined' ||
-      typeof user == 'undefined' || typeof localDb == 'undefined'
+      typeof token == 'undefined' || typeof passportProfile == 'undefined' || typeof localDb == 'undefined'
     ) {
       console.log("State is still loading...");
       return;
@@ -163,10 +139,6 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
 
     if(token && passportProfile) {
       AxiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-      if(!user) {
-        getUser();
-      }
     }
 
     // Use a debouncer to reduce calls when lots of changes happen at the same time
@@ -177,7 +149,6 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
           Platform.OS == 'web' && !__DEV__ ? {} :
           { token:token, passportProfile: passportProfile? JSON.stringify(passportProfile): null }
         ),
-        user: passportProfile? JSON.stringify(user): null,
         localDb: passportProfile? JSON.stringify(localDb): null,
         STORAGE_VERSION: STORAGE_VERSION
       };
@@ -195,7 +166,7 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
     return () => {
       if(debouncer) clearTimeout(debouncer);
     }
-  }, [token, passportProfile, user, localDb]);
+  }, [token, passportProfile, localDb]);
 
   useEffect(() => {
     if(!token || !passportProfile)
@@ -239,17 +210,14 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
           setPassportProfile(ev.data.slice(8)? JSON.parse(ev.data.slice(8)): null);
       }
 
-      AsyncStorage.multiGet(['user', 'localDb', 'STORAGE_VERSION']).then((results) => {
+      AsyncStorage.multiGet(['localDb', 'STORAGE_VERSION']).then((results) => {
         // Default values
         setToken(markReady);
         setPassportProfile(markReady);
-        setUser(markReady);
         setLocalDb(markReady);
         let storageVersion;
         results.forEach((result) => {
-          if(result[0] == 'user' && result[1])
-            setUser(JSON.parse(result[1]));
-          else if(result[0] == 'localDb' && result[1])
+          if(result[0] == 'localDb' && result[1])
             setLocalDb(JSON.parse(result[1]));
           else if(result[0] == 'STORAGE_VERSION')
             storageVersion = result[1];
@@ -260,11 +228,10 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
         }
       });
     } else {
-      AsyncStorage.multiGet(['token', 'profile', 'user', 'localDb', 'STORAGE_VERSION']).then((results) => {
+      AsyncStorage.multiGet(['token', 'profile', 'localDb', 'STORAGE_VERSION']).then((results) => {
         // Default values
         setToken(markReady);
         setPassportProfile(markReady);
-        setUser(markReady);
         setLocalDb(markReady);
         let storageVersion;
           results.forEach((result) => {
@@ -272,8 +239,6 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
               setToken(result[1]);
             else if(result[0] == 'profile' && result[1])
               setPassportProfile(JSON.parse(result[1]));
-            else if(result[0] == 'user' && result[1])
-              setUser(JSON.parse(result[1]));
             else if(result[0] == 'localDb' && result[1])
               setLocalDb(JSON.parse(result[1]));
             else if(result[0] == 'STORAGE_VERSION')
@@ -289,7 +254,7 @@ const DbProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
 
   return (
     <DbContext.Provider
-      value={{ token, passportProfile, user, localDb, offline, signIn, signOut, updateDb }}
+      value={{ token, passportProfile, localDb, offline, signIn, signOut, updateDb }}
     >
       {children}
     </DbContext.Provider>

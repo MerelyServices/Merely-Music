@@ -1,7 +1,7 @@
 import * as express from 'express';
 import { FindOptions, ObjectId } from 'mongodb';
 import { Conn } from './mongo.helper';
-import { PassportLink, PassportProfile } from './passport';
+import { PassportLink } from './passport';
 import { Album, Artist, UserDatabase, Genre, Metadata, OtherUser, Playlist, Song, User, SongMetadata } from './models';
 
 const routes = express.Router();
@@ -15,7 +15,7 @@ export default function (passport: PassportLink): express.Router {
 
   async function getSongs(token:string): Promise<Song[]> {
     const search = {
-      'owners.owner': passport.sessionUsers[token]._id
+      'owners.owner': passport.sessionUsers[token]
     };
     return await Conn.db.collection('song').find(search).toArray() as Song[];
   }
@@ -28,7 +28,7 @@ export default function (passport: PassportLink): express.Router {
   async function getSong(id:ObjectId, token:string): Promise<Song[]> {
     const search = {
       _id: id,
-      'owners.owner': passport.sessionUsers[token]._id
+      'owners.owner': passport.sessionUsers[token]
     };
     return await Conn.db.collection('song').find(search).toArray() as Song[];
   }
@@ -75,7 +75,7 @@ export default function (passport: PassportLink): express.Router {
   }
 
   routes.get("/songmetadata", async (req, res) => {
-    const result = await getSongsWithMetadata(passport.sessionUsers[req.token]._id);
+    const result = await getSongsWithMetadata(passport.sessionUsers[req.token]);
     res.status(200).send(result);
   });
 
@@ -142,8 +142,8 @@ export default function (passport: PassportLink): express.Router {
   async function getPlaylists(token:string): Promise<Playlist[]> {
     const search = {
       $or: [
-        { owner: passport.sessionUsers[token]._id },
-        { collaborators: passport.sessionUsers[token]._id },
+        { owner: passport.sessionUsers[token] },
+        { collaborators: passport.sessionUsers[token] },
       ]
     };
     return await Conn.db.collection('playlist').find(search).toArray() as Playlist[];
@@ -158,8 +158,8 @@ export default function (passport: PassportLink): express.Router {
     const search = {
       _id: id,
       $or: [
-        { owner: passport.sessionUsers[token]._id },
-        { collaborators: passport.sessionUsers[token]._id },
+        { owner: passport.sessionUsers[token] },
+        { collaborators: passport.sessionUsers[token] },
       ]
     };
     return await Conn.db.collection('playlist').find(search).toArray() as Playlist[];
@@ -179,15 +179,21 @@ export default function (passport: PassportLink): express.Router {
     return await Conn.db.collection('user').find(search, options).toArray() as OtherUser[];
   }
 
+  async function getUser(token:string) {
+    const search = {_id: passport.sessionUsers[token]};
+    return (await Conn.db.collection('user').find(search).toArray())[0] as User;
+  }
+
   routes.get("/user", async (req, res) => {
-    res.status(200).send(passport.sessionUsers[req.token]);
+    res.status(200).send();
   });
 
   routes.post("/sync", async (req, res) => {
     // TODO: readonly for now
-    const userId = passport.sessionUsers[req.token]._id;
+    const userId = passport.sessionUsers[req.token];
 
     const result: Omit<UserDatabase, 'lastSync'> = {
+      user: await getUser(req.token),
       artists: await getArtists(),
       albums: await getAlbums(),
       genres: await getGenres(),
